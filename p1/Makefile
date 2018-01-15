@@ -1,5 +1,6 @@
 ## Author: Steffen Viken Valvaag <steffenv@cs.uit.no> 
-LIST_SRC=linkedlist.c
+
+LIST_SRC=#linkedlist.c
 SORTWORDS_SRC=sortwords.c common.c $(LIST_SRC)
 REVERSEWORDS_SRC=reversewords.c common.c $(LIST_SRC)
 HEADERS=common.h list.h

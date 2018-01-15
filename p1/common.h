@@ -1,4 +1,5 @@
 /* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
+
 #ifndef COMMON_H
 #define COMMON_H
 
