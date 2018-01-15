@@ -1,11 +1,11 @@
 #include "list.h"
-#include "common.h"
 #include <assert.h>
 
 struct list 
 {
     int size;
-    void *data;
+    int length;
+    void **array;
     cmpfunc_t comparer;
 };
 
@@ -15,21 +15,38 @@ list_t *list_create(cmpfunc_t cmpfunc)
 
     assert(list != NULL);
 
-    list->size = 0;
+    list->size = 8;
+    list->length = 0;
     list->comparer = cmpfunc;
+    list->array = (void**)malloc(sizeof(void*));
 
+    if(list->array == NULL)
+    {
+        free(list);
+        list = NULL;
+    }
+
+    assert(list != NULL);
     return list;
 }
 
 void list_destroy(list_t *list)
 {
+    assert(list != NULL);
 
+    for(int i = 0; i < list->length; i++)
+    {
+        free(list->array[i]);
+    }
+    
+    free(list->array);
+    free(list);
 }
 
 int list_size(list_t *list)
 {
     assert(list != NULL);
-    return list->size;
+    return list->length;
 }
 
 void list_addfirst(list_t *list, void *elem)
