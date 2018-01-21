@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include "common.h"
 #include "list.h"
 
 typedef struct node node_t;
