@@ -28,9 +28,7 @@ int main(int argc, char **argv)
     list_addfirst(list, "c");
 
     print_list(list);
-
     list_sort(list);
-
     print_list(list);
     
     list_destroy(list);

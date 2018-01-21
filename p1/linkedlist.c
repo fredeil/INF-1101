@@ -148,33 +148,33 @@ int list_contains(list_t *list, void *elem)
     return 0;
 }
 
-// Naive solution to only swap the data
+// Naive but easy to only swap the data
 void swap_elem(node_t *left, node_t *right)
 {
    void *tmp = left->elem;
    left->elem = right->elem;
    right->elem = tmp;
-   printf("\n swap %s <-> %s", left->elem, right->elem);
 }
 
 void list_sort(list_t *list)
 {
     // Nothing to sort
-    if(list->head == NULL || list->head->next == NULL)
+    if(list->head == NULL)
     {
         fatal_error("list_sort: param null");
     }
 
-    node_t *temp = NULL;
-    node_t *current = list->head;
+    node_t *current;
     cmpfunc_t compare = list->cmpfunc;
 
-    while(1)
+    // Bubble Sort inspo: https://en.wikipedia.org/wiki/Bubble_sort#Pseudocode_implementation
+    for(int i = 0; i < list_size(list); i++)
     {
-        while(current != NULL)
+        current = list->head;
+        while (current->next != NULL)
         {
-            if(compare(current->elem, current->next->elem) > 0)
-            {
+            if (compare(current->elem, current->next->elem) > 0)
+            { 
                 swap_elem(current, current->next);
             }
             current = current->next;
