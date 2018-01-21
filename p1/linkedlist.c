@@ -4,7 +4,6 @@
 #include "list.h"
 
 typedef struct node node_t;
-
 struct node 
 {
     void *elem;
@@ -38,7 +37,6 @@ void list_destroy(list_t *list)
     node_t *temp;
 
     node = list->head;
-
     while(node != NULL)
     {
          temp = node;
@@ -57,7 +55,6 @@ int list_size(list_t *list)
 void list_addfirst(list_t *list, void *elem)
 {
     node_t *node = malloc(sizeof(node_t));
-
     if(node == NULL)
     {
         fatal_error("Out of memory.");
@@ -154,22 +151,45 @@ int list_contains(list_t *list, void *elem)
 
 void list_sort(list_t *list)
 {
-    
+
 }
 
-
+/**** Iterator *****/
+ 
 struct list_iter
 {
-    list_t *list;
     node_t *node;
 };
 
-list_iter_t *list_createiter(list_t *list);
+list_iter_t *list_createiter(list_t *list)
+{
+    list_iter_t *iter = malloc(sizeof(list_iter_t));
+    if(iter == NULL)
+    {
+        fatal_error("Out of memory");
+    }
+    
+    iter->node = list->head;
 
-void list_destroyiter(list_iter_t *iter);
+    return iter;
+}
 
-int list_hasnext(list_iter_t *iter);
+void list_destroyiter(list_iter_t *iter)
+{
+    free(iter);
+}
 
-void *list_next(list_iter_t *iter);
+int list_hasnext(list_iter_t *iter)
+{
+    if(iter->node->next == NULL)
+    {
+        return 0;
+    }
 
-int main(void){return 0;}
+    return 1;
+}
+
+void *list_next(list_iter_t *iter)
+{
+  return NULL;
+}
