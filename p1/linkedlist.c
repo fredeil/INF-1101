@@ -149,9 +149,24 @@ int list_contains(list_t *list, void *elem)
     return 0;
 }
 
+// Bubblesort
 void list_sort(list_t *list)
 {
+    cmpfunc_t cmp = list->cmpfunc;
 
+    // Nothing to sort
+    if(list->head == NULL)
+    {
+        return;
+    }
+
+    node_t *left = list->head;
+    node_t *right = list->head->next;
+    
+    while(left != NULL)
+    {
+
+    }
 }
 
 /**** Iterator *****/
@@ -191,5 +206,8 @@ int list_hasnext(list_iter_t *iter)
 
 void *list_next(list_iter_t *iter)
 {
-  return NULL;
+    void *retval = iter->node->elem;
+    iter->node = iter->node->next;
+
+    return retval;
 }
