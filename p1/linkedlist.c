@@ -1,4 +1,6 @@
 #include "list.h"
+#include <stdio.h>
+#include <string.h>
 
 typedef struct node node_t;
 struct node 
@@ -24,16 +26,16 @@ list_t *list_create(cmpfunc_t cmpfunc)
 
     list->lenght = 0;
     list->head = NULL;
+    list->cmpfunc = cmpfunc;
 
     return list;
 }
 
 void list_destroy(list_t *list)
 {
-    node_t *node;
     node_t *temp;
 
-    node = list->head;
+    node_t *node = list->head;
     while(node != NULL)
     {
          temp = node;
@@ -146,28 +148,41 @@ int list_contains(list_t *list, void *elem)
     return 0;
 }
 
-// Bubblesort
+// Naive solution to only swap the data
+void swap_elem(node_t *left, node_t *right)
+{
+   void *tmp = left->elem;
+   left->elem = right->elem;
+   right->elem = tmp;
+   printf("\n swap %s <-> %s", left->elem, right->elem);
+}
+
 void list_sort(list_t *list)
 {
-    cmpfunc_t cmp = list->cmpfunc;
-
     // Nothing to sort
-    if(list->head == NULL)
+    if(list->head == NULL || list->head->next == NULL)
     {
-        return;
+        fatal_error("list_sort: param null");
     }
 
-    node_t *left = list->head;
-    node_t *right = list->head->next;
-    
-    while(left != NULL)
-    {
+    node_t *temp = NULL;
+    node_t *current = list->head;
+    cmpfunc_t compare = list->cmpfunc;
 
+    while(1)
+    {
+        while(current != NULL)
+        {
+            if(compare(current->elem, current->next->elem) > 0)
+            {
+                swap_elem(current, current->next);
+            }
+            current = current->next;
+        }
     }
 }
 
 /**** Iterator *****/
- 
 struct list_iter
 {
     node_t *node;
@@ -180,7 +195,7 @@ list_iter_t *list_createiter(list_t *list)
     {
         fatal_error("Out of memory");
     }
-    
+
     iter->node = list->head;
 
     return iter;
@@ -193,7 +208,7 @@ void list_destroyiter(list_iter_t *iter)
 
 int list_hasnext(list_iter_t *iter)
 {
-    if(iter->node->next == NULL)
+    if(iter->node == NULL)
     {
         return 0;
     }

@@ -7,11 +7,6 @@ void fatal_error(char *msg)
     exit(1);
 }
 
-int string_compare(void *p1, void *p2)
-{
-   return strcmp((char*)p1, (char*)p2);
-}
-
 void tokenize_file(FILE *file, list_t *list)
 {
     char *word;
