@@ -24,10 +24,10 @@ list_t *list_create(cmpfunc_t cmpfunc)
     {
         fatal_error("out of memory");
     } 
-
     list->head = NULL; 
-    int length = 0;
-
+    list->length = 0;
+    list->cmpfunc = cmpfunc;
+ 
     return list;
 }
 
@@ -141,10 +141,9 @@ int list_contains(list_t *list, void *elem)
     }
 
     node_t *node = list->head;
-
     while(node->next != NULL)
     {
-        if(list->cmpfunc(node, elem) == 0)
+        if(list->cmpfunc(node->elem, elem) == 0)
         {
             return 1;
         }

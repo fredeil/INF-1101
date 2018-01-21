@@ -2,6 +2,8 @@
 #include "common.h"
 #include "list.h"
 
+
+
 void fatal_error(char *msg)
 {
     fprintf(stderr, "fatal error: %s\n", msg);
@@ -13,7 +15,7 @@ void tokenize_file(FILE *file, list_t *list)
     char *word;
     char buf[101];
     buf[100] = 0;
-
+	
     while (!feof(file)) {
 	/* Skip non-letters */
 	fscanf(file, "%*[^a-zA-Z0-9'_]");
