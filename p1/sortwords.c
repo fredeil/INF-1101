@@ -19,11 +19,11 @@ void print_list(list_t *list)
     list_destroyiter(iter);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     list_t *list = list_create(string_compare);
 
-    FILE *fp = fopen("words.txt", "r");
+    FILE *fp = fopen(argv[1], "r");
     
     tokenize_file(fp, list);
 
