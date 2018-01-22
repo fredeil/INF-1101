@@ -3,7 +3,7 @@
 
 int string_compare(void *p1, void *p2)
 {
-   return strcmp((char*)p1, (char*)p2);
+   return strcasecmp((char*)p1, (char*)p2);
 }
 
 void print_list(list_t *list)
@@ -28,5 +28,8 @@ int main(int argc, char **argv)
     tokenize_file(fp, list);
 
     print_list(list);
+    list_sort(list);
+    print_list(list);
+
     return 0;
 }
