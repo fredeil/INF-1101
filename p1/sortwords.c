@@ -13,7 +13,7 @@ void print_list(list_t *list)
     list_iter_t *iter = list_createiter(list);
     while (list_hasnext(iter))
     {
-        printf("%s \n", list_next(iter));
+        printf("%s \n", (char*)list_next(iter));
     }
 
     list_destroyiter(iter);
@@ -23,15 +23,10 @@ int main(int argc, char **argv)
 {
     list_t *list = list_create(string_compare);
 
-    list_addfirst(list, "a");
-    list_addfirst(list, "b");
-    list_addfirst(list, "c");
-
-    print_list(list);
-    list_sort(list);
-    print_list(list);
+    FILE *fp = fopen("words.txt", "r");
     
-    list_destroy(list);
+    tokenize_file(fp, list);
 
+    print_list(list);
     return 0;
 }

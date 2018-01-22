@@ -73,8 +73,11 @@ void list_addlast(list_t *list, void *elem)
         fatal_error("Out of memory.");    
     }
 
-    node->elem = elem;
-    node->next = NULL;
+    if(list->head == NULL)
+    {
+        list_addfirst(list, elem);
+        return;
+    }
 
     node_t *current = list->head;
     while(current->next != NULL) 
@@ -82,7 +85,11 @@ void list_addlast(list_t *list, void *elem)
         current = current->next;
     }
 
+    node->elem = elem;
+    node->next = NULL;
+
     current->next = node;
+
     list->lenght++;
 }
 
