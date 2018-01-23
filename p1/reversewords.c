@@ -6,7 +6,7 @@ int string_compare(void *p1, void *p2)
    return strcasecmp((char*)p1, (char*)p2);
 }
 
-void print_list(list_t *list)
+void list_print(list_t *list)
 {
     list_iter_t *iter = list_createiter(list);
     while (list_hasnext(iter))
@@ -28,6 +28,7 @@ void reverse_list(list_t **list)
     }
 
     *list = newlist;
+
     list_destroyiter(iter);
 }
 
@@ -35,9 +36,7 @@ int main(int argc, char *argv[])
 {
     list_t *list = list_create(string_compare);
 
-    FILE *fp = fopen(argv[1], "r");
-    
-    tokenize_file(fp, list);
+    tokenize_file(fopen(argv[1], "r"), list);
 
     print_list(list);
     puts("\n");    
