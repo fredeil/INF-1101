@@ -3,7 +3,7 @@ SORTWORDS_SRC=sortwords.c common.c $(LIST_SRC)
 REVERSEWORDS_SRC=reversewords.c common.c $(LIST_SRC)
 HEADERS=common.h list.h test/lib/tap.h
 
-all: sortwords reversewords tests
+all: tests sortwords reversewords 
 
 sortwords: $(SORTWORDS_SRC) $(HEADERS) Makefile
 	gcc -o $@ $(SORTWORDS_SRC)
@@ -11,5 +11,8 @@ sortwords: $(SORTWORDS_SRC) $(HEADERS) Makefile
 reversewords: $(REVERSEWORDS_SRC) $(HEADERS) Makefile
 	gcc -o $@ $(REVERSEWORDS_SRC)
 
+tests: Makefile
+	cd test && make -s --no-print-directory
+
 clean:
-	rm -f *~ *.o *.exe *.out sortwords reversewords tests
+	rm -f  *.txt *~ *.o *.exe *.out sortwords reversewords ./test/test ./test/*.txt

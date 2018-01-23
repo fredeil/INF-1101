@@ -9,6 +9,7 @@ int string_compare(void *p1, void *p2)
 int main () 
 {
     plan(12);
+    puts("---- Running unit tests ----");
 
     list_t *list = list_create(string_compare);
 
@@ -76,5 +77,8 @@ int main ()
     list_destroy(list);
     list_destroyiter(iter);
 
-    done_testing();
+    if(exit_status() == 0)
+    {
+        puts("------ All tests passed ------");
+    }
 }
