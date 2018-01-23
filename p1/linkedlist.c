@@ -33,17 +33,19 @@ list_t *list_create(cmpfunc_t cmpfunc)
 
 void list_destroy(list_t *list)
 {
-    node_t *temp;
-
+    node_t *temp = NULL;
     node_t *node = list->head;
+
     while(node != NULL)
     {
          temp = node;
          node = node->next;
-         free(temp);    
+         free(temp);
+         temp = NULL;  
     }
 
     free(list);
+    list = NULL;
 }
 
 int list_size(list_t *list)
@@ -105,6 +107,7 @@ void *list_popfirst(list_t *list)
     list->head = node->next;
     list->lenght--;
     free(node);
+    node = NULL;
 
     return retval;
 }
@@ -116,8 +119,8 @@ void *list_poplast(list_t *list)
         return NULL;
     }
     
-    void *retval;
-    node_t *prev;
+    void *retval = NULL;
+    node_t *prev = NULL;
 
     node_t *node = list->head;
     while(node->next != NULL)
@@ -130,6 +133,7 @@ void *list_poplast(list_t *list)
     prev->next = NULL;
     list->lenght--;
     free(node);
+    node = NULL;
 
     return retval;
 }
@@ -142,7 +146,7 @@ int list_contains(list_t *list, void *elem)
     }
 
     node_t *node = list->head;
-    while(node->next != NULL)
+    while(node != NULL)
     {
         if(list->cmpfunc(node->elem, elem) == 0)
         {
@@ -158,6 +162,11 @@ int list_contains(list_t *list, void *elem)
 // Naive but easy to only swap the data
 void swap_elem(node_t *left, node_t *right)
 {
+   if(left == NULL || right == NULL)
+   {
+       return;
+   }
+
    void *tmp = left->elem;
    left->elem = right->elem;
    right->elem = tmp;
@@ -171,7 +180,7 @@ void list_sort(list_t *list)
         fatal_error("list_sort: param null");
     }
 
-    node_t *current;
+    node_t *current = NULL;
     cmpfunc_t compare = list->cmpfunc;
 
     // Bubble Sort inspo: https://en.wikipedia.org/wiki/Bubble_sort#Pseudocode_implementation
@@ -199,11 +208,17 @@ struct list_iter
 
 list_iter_t *list_createiter(list_t *list)
 {
+    if(list == NULL) 
+    {
+        return NULL;
+    }
+
     list_iter_t *iter = malloc(sizeof(list_iter_t));
     if(iter == NULL)
     {
         fatal_error("Out of memory.");
     }
+
 
     iter->list = list;
     iter->node = list->head;
@@ -214,6 +229,7 @@ list_iter_t *list_createiter(list_t *list)
 void list_destroyiter(list_iter_t *iter)
 {
     free(iter);
+    iter = NULL;
 }
 
 int list_hasnext(list_iter_t *iter)
