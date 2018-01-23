@@ -194,6 +194,7 @@ void list_sort(list_t *list)
 struct list_iter
 {
     node_t *node;
+    list_t *list;
 };
 
 list_iter_t *list_createiter(list_t *list)
@@ -204,6 +205,7 @@ list_iter_t *list_createiter(list_t *list)
         fatal_error("Out of memory.");
     }
 
+    iter->list = list;
     iter->node = list->head;
 
     return iter;

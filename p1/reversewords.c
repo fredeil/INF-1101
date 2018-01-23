@@ -6,7 +6,7 @@ int string_compare(void *p1, void *p2)
    return strcasecmp((char*)p1, (char*)p2);
 }
 
-void list_print(list_t *list)
+void print_list(list_t *list)
 {
     list_iter_t *iter = list_createiter(list);
     while (list_hasnext(iter))
