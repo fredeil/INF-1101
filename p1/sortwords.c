@@ -8,12 +8,10 @@ int string_compare(void *p1, void *p2)
 
 void print_list(list_t *list)
 {
-    puts("\n");
-    
     list_iter_t *iter = list_createiter(list);
     while (list_hasnext(iter))
     {
-        printf("%s \n", (char*)list_next(iter));
+        printf("%s ", (char*)list_next(iter));
     }
 
     list_destroyiter(iter);
@@ -28,8 +26,10 @@ int main(int argc, char *argv[])
     tokenize_file(fp, list);
 
     print_list(list);
+    puts("\n");
     list_sort(list);
     print_list(list);
+    puts("\n");
 
     return 0;
 }

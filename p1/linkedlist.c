@@ -184,6 +184,7 @@ void list_sort(list_t *list)
             { 
                 swap_elem(current, current->next);
             }
+
             current = current->next;
         }
     }
@@ -200,7 +201,7 @@ list_iter_t *list_createiter(list_t *list)
     list_iter_t *iter = malloc(sizeof(list_iter_t));
     if(iter == NULL)
     {
-        fatal_error("Out of memory");
+        fatal_error("Out of memory.");
     }
 
     iter->node = list->head;
