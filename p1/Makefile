@@ -11,5 +11,6 @@ sortwords: $(SORTWORDS_SRC) $(HEADERS) Makefile
 reversewords: $(REVERSEWORDS_SRC) $(HEADERS) Makefile
 	gcc -o $@ $(REVERSEWORDS_SRC)
 
+
 clean:
 	rm -f *~ *.o *.exe *.out sortwords reversewords
