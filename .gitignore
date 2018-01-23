@@ -3,3 +3,6 @@
 *.exe
 *.o
 *~
+*.txt
+*.stackdump
+*.DS_Store
