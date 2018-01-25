@@ -36,7 +36,9 @@ int main(int argc, char *argv[])
 {
     list_t *list = list_create(string_compare);
 
-    tokenize_file(fopen(argv[1], "r"), list);
+    FILE *fp = fopen(argv[1], "r");
+    tokenize_file(fp, list);
+    fclose(fp);
 
     print_list(list);
     puts("\n");    
