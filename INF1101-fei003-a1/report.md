@@ -3,6 +3,8 @@ This report details the implementation of a replication of the well-known Arcade
 
 The underlying intent of the project is to utilize object-oriented design by exploring OOP concepts such as classes, inheritance, polymorphism in order to solve a software problem.
 
+<img src="https://latex.codecogs.com/gif.latex?\sqrt{a^2&plus;b^2}" title="\sqrt{a^2+b^2}" />
+
 ## 1. Implementation requirements
 The requirements for the code were as following (taken directly from the assignment):
 
