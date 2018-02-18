@@ -1,40 +1,28 @@
 # INF-1101 - fei003 - a1
-This report details the implementation of a replication of the well-known Arcade game named **Breakout**, which was originally developed and published by Atari, Inc. in 1973 <sup id="a1">[1](#f1)</sup>. 
-
-The underlying intent of the project is to utilize object-oriented design by exploring OOP concepts such as classes, inheritance, polymorphism in order to solve a software problem.
-
-<img src="https://latex.codecogs.com/gif.latex?\sqrt{a^2&plus;b^2}" title="\sqrt{a^2+b^2}" />
+This report details the implementation of a a set, more specifically an *ordered set*, which was used as the underlying data structure for a "spam filter" program. The results of the implementations are also benchmarked and tested thorougly.
 
 ## 1. Implementation requirements
-The requirements for the code were as following (taken directly from the assignment):
+Some implementation details were given for the ordered set. The supported operations are:
+1. Adding an element to the set.
+2. Getting the current size of the set.
+3. Checking wheter a specific element is contained in the set.
+4. Getting the union of the set and another set.
+5. Getting the intersection of the set and another set.
+6. Getting the relative component set of the set.
+7. Iterating over the elements of the set, in sorted order.
+8. No upper bound on the number of elements that may be inserted into the set.
 
-1. Implement the game in accordance to object-oriented design,
-2. The platform (pad) should be controlled by the mouse or keyboard,
-3. The ball should bounce in a different direction based on where on the pad it hits,
-4. A brick disappears when a ball hits it,
-5. The ball bounces off the walls, angle in = angle out,
-6. The game is won when all bricks are removed, the game is lost when the ball its the bottom of the screen.
-
-There were also examples on extra features to implemented (e.g., more levels, high score list, sound, etc.). 
-
-For more information about technological requirements/prerequisites refer to the [README.md](./src/README.md) file in the `src/` directory.
-
+The assignment also stated that proper analyzis of the performance of the seven supported operations, which can be different between multiple implementations, had to be documented in the report.
 
 ## 2. Theoretical background
-For implementing the game, various OOP concepts were used such as inheritance, "encapsulation" and polymorpism. By utilizing these concepts much of the code is written once an reused other places in the code, which is the idea behind OOP.
+<sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessed through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
+What this inherently means, is that the same set of operations can have several different implementations, and that the client can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
 
-The programming language used in this project was Python, which is an interpreted high-level programming language well suited for object oriented design.
+In order to evaluate the effectivenes, or rather, the complexity of an algorithm, this report will use a mathematical notation called *Big O*. Big O is used  (in computer science) to classify an algorithms running time, or space requirements, as the input size increases. The mathematical definition will not be included in this report.
 
-For speeding up the development process a python module/library called __Pygame__ is used, pygame is an highly portable, cross-platform open-source library for making multimedia applications such as games <sup id="a2">[2](#f2)</sup>.
+For implementing an ordered set as an ADT, an interface that describes the operations with its return types and what not, were given in the precode handed out (see [src/](./src/)).
 
-The pygame documentation states that games run in a fixed pattern, which continously does these four tasks (often reffered to as the game loop):
-
-1. Poll and handle events (e.g., user events, time, etc.)
-2. Update game elements (e.g., remove objects, update positions)
-3. Draw current state to the surface 
-4. Display the surface 
-
-## 3. Implementation
+## 2. Implementation
 The project is divided into 3 modules
 1. Objects
    - ball.py
@@ -66,6 +54,7 @@ The sprites/gameobjects uses the built in collision detection in pygame (it was 
 The game loop referred to in section #2 is partly defined in breakout.py and in the gamescene, this is because different scenes can draw and update different objects. this means that different scenes can be injected in the main game loop at run time.
 
 The rest is self-explanatory in the source code (which is well commented).
+## 3. Design
 
 ## 4. Conclusion
 Altough the game is working, it is by no means perfect. There was complications in implementing proper collision resolution between object (which is was that part was omitted)
@@ -77,6 +66,8 @@ Missing implementations based on the requirements from section #1:
 The report itself is also lacking a bit, the UML-diagrams are missing because this report was written in Markdown on a phone whilst commuting.
 
 ## References
-<b id="f1">1</b> https://www.atari.com/history/1972-1984-0 [↩](#a1)
+<b id="f1">1</b> Robert Sedgewick, 1997. Algorithms in C, Parts 1-4: Fundamentals, Data Structures,
+Sorting, Searching: Fundamentals, Data Structures, Sorting, Searching. 3 Edition.
+Addison-Wesley Professional.  [↩](#a1)
 
 <b id="f1">2</b> http://www.pygame.org/wiki/about [↩](#a2)
