@@ -43,7 +43,7 @@ set_t *generate_set(unsigned int seed, int num)
 	int i;
 	
 	a = set_create(compare_ints);
-	
+
 	/* Adding random numbers based on the seed value */
 	for(i = 0; i < num; i++)
 	{
@@ -207,13 +207,13 @@ void validate_insertion(unsigned int seed)
 	
 	/* Make a copy and validate that a and b are the same */
 	b = set_copy(a);
+	
 	if(assert_set(b, seed, TEST_SET_SIZE) || set_size(a) != set_size(b))
 	{
 		fatal_error("Invalid copy, check set_copy");
 	}
 	
 	delete_generated_set(a);
-	
 	set_destroy(b);
 }
 

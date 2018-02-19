@@ -15,7 +15,7 @@ Some implementation details were given for the ordered set. The supported operat
 The assignment also stated that the performance analyzis of the seven supported operations, which can be different between multiple implementations, had to be documented in the report.
 
 ## 2. Theoretical background
-<sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessed through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
+<sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
 What this inherently means, is that the same set of operations can have several different implementations, and that the client can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
 
 In order to evaluate the effectivenes, or rather, the complexity of an algorithm, this report will use a mathematical notation called *Big O*. Big O is used  (in computer science) to classify an algorithms running time, or space requirements, as the input size increases. The mathematical definition will not be included in this report.
