@@ -9,13 +9,13 @@ HEADERS=common.h list.h set.h
 all: spamfilter numbers
 
 spamfilter: $(SPAMFILTER_SRC) $(HEADERS) Makefile
-	gcc -o $@ $(SPAMFILTER_SRC)
+	gcc -o $@ $(SPAMFILTER_SRC) -ggdb
 
 numbers: $(NUMBERS_SRC) $(HEADERS) Makefile
-	gcc -o $@ $(NUMBERS_SRC)
+	gcc -o $@ $(NUMBERS_SRC) -ggdb
 
 assert: $(ASSERT_SRC) $(HEADERS) Makefile
-	gcc -o $@ $(ASSERT_SRC)
+	gcc -o $@ $(ASSERT_SRC) -ggdb
 
 clean:
 	rm -f *~ *.o *.exe spamfilter numbers assert
