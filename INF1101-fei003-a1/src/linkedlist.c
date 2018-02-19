@@ -96,41 +96,48 @@ void *list_popfirst(list_t *list)
     if (list->head == NULL) {
 	    fatal_error("list_popfirst on empty list");
     }
-    else {
-        void *elem = list->head->elem;
-	    listnode_t *tmp = list->head;
-	    list->head = list->head->next;
-	    if (list->head == NULL) {
-	        list->tail = NULL;
-	    }
-	    else {
-	        list->head->prev = NULL;
-	    }
-	    list->size--;
-	    free(tmp);
-	    return elem;
-    }
+  
+	void *elem = list->head->elem;
+	listnode_t *tmp = list->head;
+	list->head = list->head->next;
+
+	if (list->head == NULL) 
+	{
+		list->tail = NULL;
+	}
+	else 
+	{
+		list->head->prev = NULL;
+	}
+
+	list->size--;
+	free(tmp);
+	return elem;
 }
 
 void *list_poplast(list_t *list)
 {
-    if (list->tail == NULL) {
+    if (list->tail == NULL) 
+	{
         fatal_error("list_poplast on empty list");
     }
-    else {
-        void *elem = list->tail->elem;
-	    listnode_t *tmp = list->tail;
-	    list->tail = list->tail->prev;
-	    if (list->tail == NULL) {
-	        list->head = NULL;
-	    }
-	    else {
-	        list->tail->next = NULL;
-	    }
-	    free(tmp);
-	    list->size--;
-	    return elem;
-    }
+    
+	void *elem = list->tail->elem;
+	listnode_t *tmp = list->tail;
+	list->tail = list->tail->prev;
+
+	if (list->tail == NULL) 
+	{
+		list->head = NULL;
+	}
+	else 
+	{
+		list->tail->next = NULL;
+	}
+	
+	free(tmp);
+	list->size--;
+	return elem;
 }
 
 int list_contains(list_t *list, void *elem)
@@ -294,13 +301,13 @@ int list_hasnext(list_iter_t *iter)
 
 void *list_next(list_iter_t *iter)
 {
-    if (iter->node == NULL) {
+    if (iter->node == NULL) 
+	{
 	    fatal_error("list iterator exhausted");
     }
-    else {
-	    void *elem = iter->node->elem;
-	    iter->node = iter->node->next;
-	    return elem;
-    }
+	
+	void *elem = iter->node->elem;
+	iter->node = iter->node->next;
+	return elem;
 }
 

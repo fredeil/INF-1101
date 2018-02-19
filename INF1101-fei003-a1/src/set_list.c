@@ -8,6 +8,7 @@
 struct set
 {
     list_t *list;
+    cmpfunc_t cmpfunc;
 };
 
 set_t *set_create(cmpfunc_t cmpfunc)
@@ -21,6 +22,8 @@ set_t *set_create(cmpfunc_t cmpfunc)
     }
 
     set->list = list;
+    set->cmpfunc = cmpfunc;
+
     return set;
 }
 
@@ -31,7 +34,7 @@ void set_destroy(set_t *set)
         return;
     }
 
-   list_destroy((list_t*)set->list);
+   list_destroy(set->list);
    free(set);
 }
 
@@ -68,24 +71,38 @@ int set_contains(set_t *set, void *elem)
 
 set_t *set_union(set_t *a, set_t *b)
 {
-   return set_create(NULL);
+   return NULL;
 }
 
 set_t *set_intersection(set_t *a, set_t *b)
 {
-    return set_create(NULL);
+    return NULL;
 }
 
 set_t *set_difference(set_t *a, set_t *b)
 {
-    return set_create(NULL);
+    return NULL;
 }
 
 set_t *set_copy(set_t *set)
 {
-    set_t *cpy = malloc(sizeof(set_t));
-    memcpy(cpy, set, sizeof(set_t));
+    if(set == NULL)
+    {
+        fatal_error("Set is null");
+    }
 
+    set_t *cpy = set_create(set->cmpfunc);
+    list_t *list = list_create(set->cmpfunc);
+    list_iter_t *iter = list_createiter(set->list);
+
+    while(list_hasnext(iter))
+    {
+        list_addlast(list, list_next(iter));
+    }
+
+    list_destroyiter(iter);
+
+    cpy->list = list;
     return cpy;
 }
 
@@ -120,5 +137,5 @@ int set_hasnext(set_iter_t *iter)
 
 void *set_next(set_iter_t *iter)
 {
-    list_next(iter->iter);
+    return list_next(iter->iter);
 }
