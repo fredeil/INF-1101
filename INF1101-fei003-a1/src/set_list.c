@@ -3,8 +3,6 @@
 #include "common.h"
 #include <stdlib.h>
 
-#define DEBUG 0
-
 struct set
 {
     list_t *list;
@@ -55,6 +53,12 @@ void set_add(set_t *set, void *elem)
         return;
     }
 
+    // Element already in set
+    if(list_contains(set->list, elem))
+    {
+        return;
+    }
+
     list_addfirst(set->list, elem);
     list_sort(set->list);
 }
@@ -63,7 +67,7 @@ int set_contains(set_t *set, void *elem)
 {
     if(set == NULL)
     {
-        fatal_error("Set is NULL");
+        fatal_error("Set is null: set_contains");
     }
 
     return list_contains(set->list, elem);
@@ -71,24 +75,83 @@ int set_contains(set_t *set, void *elem)
 
 set_t *set_union(set_t *a, set_t *b)
 {
-   return NULL;
+    if(a == NULL || b == NULL)
+    {
+        fatal_error("Set a or b is null");
+    }
+
+    set_t *set = set_create(a->cmpfunc);
+    set_iter_t *itera = set_createiter(a);
+    set_iter_t *iterb = set_createiter(b);
+
+    while(set_hasnext(itera))
+    {
+        set_add(set, set_next(itera));
+    }
+    set_destroyiter(itera);
+
+    while(set_hasnext(iterb))
+    {
+        set_add(set, set_next(iterb));
+    }
+    set_destroyiter(iterb);
+
+   return set;
 }
 
 set_t *set_intersection(set_t *a, set_t *b)
 {
-    return NULL;
+    if(a == NULL || b == NULL)
+    {
+        fatal_error("Set a or b is null");
+    }
+
+    set_t *set = set_create(a->cmpfunc);
+    set_iter_t *iter = set_createiter(a);
+    void *tmp;
+
+    while(set_hasnext(iter)) 
+    {
+        tmp = set_next(iter);
+        if(set_contains(b, tmp))
+        {
+            set_add(set, tmp);
+        }
+    }
+    
+    set_destroyiter(iter);
+    return set;
 }
 
 set_t *set_difference(set_t *a, set_t *b)
 {
-    return NULL;
+    if(a == NULL || b == NULL)
+    {
+        fatal_error("Set a or b is null");
+    }
+
+    set_t *set = set_create(a->cmpfunc);
+    set_iter_t *iter = set_createiter(a);
+    void *tmp;
+
+    while(set_hasnext(iter)) 
+    {
+        tmp = set_next(iter);
+        if(!set_contains(b, tmp))
+        {
+            set_add(set, tmp);
+        }
+    }
+    
+    set_destroyiter(iter);
+    return set;
 }
 
 set_t *set_copy(set_t *set)
 {
     if(set == NULL)
     {
-        fatal_error("Set is null");
+        fatal_error("Set is null: set_copy");
     }
 
     set_t *cpy = set_create(set->cmpfunc);
@@ -115,7 +178,7 @@ set_iter_t *set_createiter(set_t *set)
 {
     if(set == NULL)
     {
-        fatal_error("Set is null");
+        fatal_error("Set is null: set_createiter");
     }
 
     set_iter_t *iter = malloc(sizeof(set_iter_t));
