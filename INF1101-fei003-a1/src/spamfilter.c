@@ -105,12 +105,25 @@ int main(int argc, char **argv)
 	set_t *nonspam_union;
 	set_t *spam_intersection;
 
+	// Non spam union
+	set_t *ab = set_union(non_spam_words[0], non_spam_words[1]);
+	set_t *cd = set_union(non_spam_words[2], non_spam_words[3]);
+	nonspam_union = set_union(ab, cd);
+	set_destroy(ab);
+	set_destroy(cd);
+
 	// Spam intersection
-	nonspam_union = set_union(set_union(non_spam_words[0], non_spam_words[1]), set_union(non_spam_words[2], non_spam_words[3]));
-    spam_intersection = set_intersection(set_intersection(spam_words[0], spam_words[1]), set_intersection(spam_words[2], spam_words[3]));
+	ab = set_intersection(spam_words[0], spam_words[1]);
+	cd = set_intersection(spam_words[2], spam_words[3]);
+    spam_intersection = set_intersection(ab, cd);
+	set_destroy(ab);
+	set_destroy(cd);
+
+	// Subtract spam and non spam
 	difference = set_difference(spam_intersection, nonspam_union);
 
-	
+	printwords("", difference);
+
 	set_destroy(difference);
 	set_destroy(nonspam_union);
 	set_destroy(spam_intersection);
