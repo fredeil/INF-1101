@@ -63,7 +63,8 @@ static void printwords(char *prefix, set_t *words)
 int main(int argc, char **argv)
 {
 	int numdir = argc - 1;
-	set_t *mail_words[4], *spam_words[3], *non_spam_words[3];
+	set_t *mail_words[5], *spam_words[4], *non_spam_words[4];
+
 
 	if (argc != 4) 
 	{
@@ -122,11 +123,11 @@ int main(int argc, char **argv)
 	// Subtract spam and non spam
 	difference = set_difference(spam_intersection, nonspam_union);
 
-	printwords("", difference);
-
 	set_destroy(difference);
 	set_destroy(nonspam_union);
 	set_destroy(spam_intersection);
+
+	//set_t *mail_words[4], *spam_words[3], *non_spam_words[3];
 
     return 0;
 }
