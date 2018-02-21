@@ -58,16 +58,28 @@ static void printwords(char *prefix, set_t *words)
  */
 int main(int argc, char **argv)
 {
+
 	char *spamdir, *nonspamdir, *maildir;
 	
-	if (argc != 4) {
-		fprintf(stderr, "usage: %s <spamdir> <nonspamdir> <maildir>\n",
-				argv[0]);
-		return 1;
-	}
 	spamdir = argv[1];
 	nonspamdir = argv[2];
 	maildir = argv[3];
+
+	list_t *spam_files = find_files(spamdir);
+	list_t *non_spam_files = find_files(nonspamdir);
+	list_t *mail_files = find_files(maildir);
+
+    list_iter_t *iter = list_createiter(mail_files);
+	while(list_hasnext(iter))
+	{
+		puts((char*)list_next(iter));
+	}
+
+	if (argc != 4) 
+	{
+		fprintf(stderr, "usage: %s <spamdir> <nonspamdir> <maildir>\n", argv[0]);
+		return 1;
+	}
 
     return 0;
 }

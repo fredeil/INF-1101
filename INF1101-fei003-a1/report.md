@@ -14,6 +14,9 @@ Some implementation details were given for the ordered set. The supported operat
 
 The assignment also stated that the performance analyzis of the seven supported operations, which can be different between multiple implementations, had to be documented in the report.
 
+### 1.1 Applications
+
+
 ## 2. Theoretical background
 <sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
 What this inherently means, is that the same set of operations can have several different implementations, and that the client can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
@@ -23,15 +26,16 @@ In order to evaluate the effectivenes, or rather, the complexity of an algorithm
 For implementing an ordered set as an ADT, an interface that described the operations with its return types and what not, was given in the precode (see [src/](./src/)).
 
 ## 3. Implementation
-The rest is self-explanatory in the source code (which is well commented).
+When deciding on which way to implement the sorted set, two alternatives were considered. One that would have low development cost but high performance cost and vice versa. These are trade offs that often has to be considered in real life situations when developing software (i.e., development cost vs optimal performance), so this was a good exercise.
 
-## 4. Design
-The point of interest in the design was the `set_contains()` function, which was implemented using a standard __INSERTALGORITHMNAMEHERE_ algorithm. 
+The results of the different implementations are explained and depicted in the discussion section of this report.
 
-## 5. Discussion
+The first sorted set implementation was done using the linked list implementation given in the precode. This was by far the slowest (in terms of run time), naive and reckless implementation. Very little effort went into optimizing the code. As long as the tests passed, it was fine. The positive part of this implementation was its low development cost (time).
+
+## 4. Discussion
 In this section, the choices and the following consequences will be discussed. 
 
-## 6. Conclusion
+## 5. Conclusion
 Something
 
 ## References

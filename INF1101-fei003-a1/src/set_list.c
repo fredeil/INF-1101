@@ -53,14 +53,12 @@ void set_add(set_t *set, void *elem)
         return;
     }
 
-    // Element already in set
-    if(list_contains(set->list, elem))
+    // Element not already in set
+    if(list_contains(set->list, elem) == 0)
     {
-        return;
+        list_addfirst(set->list, elem);
+        list_sort(set->list);
     }
-
-    list_addfirst(set->list, elem);
-    list_sort(set->list);
 }
 
 int set_contains(set_t *set, void *elem)
@@ -108,8 +106,8 @@ set_t *set_intersection(set_t *a, set_t *b)
 
     set_t *set = set_create(a->cmpfunc);
     set_iter_t *iter = set_createiter(a);
-    void *tmp;
 
+    void *tmp;
     while(set_hasnext(iter)) 
     {
         tmp = set_next(iter);
