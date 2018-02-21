@@ -22,16 +22,20 @@ static set_t *tokenize(char *filename)
 	FILE *f;
 	
 	f = fopen(filename, "r");
-	if (f == NULL) {
+	if (f == NULL) 
+	{
 		perror("fopen");
 		fatal_error("fopen() failed");
 	}
+
 	tokenize_file(f, wordlist);
 	
 	it = list_createiter(wordlist);
-	while (list_hasnext(it)) {
+	while (list_hasnext(it)) 
+	{
 		set_add(wordset, list_next(it));		
 	}
+
 	list_destroyiter(it);
 	list_destroy(wordlist);
 	return wordset;
@@ -58,28 +62,52 @@ static void printwords(char *prefix, set_t *words)
  */
 int main(int argc, char **argv)
 {
-
-	char *spamdir, *nonspamdir, *maildir;
-	
-	spamdir = argv[1];
-	nonspamdir = argv[2];
-	maildir = argv[3];
-
-	list_t *spam_files = find_files(spamdir);
-	list_t *non_spam_files = find_files(nonspamdir);
-	list_t *mail_files = find_files(maildir);
-
-    list_iter_t *iter = list_createiter(mail_files);
-	while(list_hasnext(iter))
-	{
-		puts((char*)list_next(iter));
-	}
+	int numdir = argc - 1;
+	set_t *mail_words[4], *spam_words[3], *non_spam_words[3];
 
 	if (argc != 4) 
 	{
 		fprintf(stderr, "usage: %s <spamdir> <nonspamdir> <maildir>\n", argv[0]);
 		return 1;
 	}
+
+	list_t *files[numdir];
+	list_iter_t *file_iter;
+
+	// Get all words from all spam, non-spam and mail
+	for(int i = 0; i < numdir; i++)
+	{
+		files[i] = find_files(argv[i + 1]);
+		file_iter = list_createiter(files[i]);
+
+		int j = 0;
+		while(list_hasnext(file_iter))
+		{
+			char *file = list_next(file_iter);
+			switch(i)
+			{
+				case 0: spam_words[j] = tokenize(file); break;
+				case 1: non_spam_words[j] = tokenize(file); break;
+				case 2: mail_words[j] = tokenize(file); break;
+			}
+			j++;
+		}
+		list_destroyiter(file_iter);
+	}
+
+	// Clean up files
+	for(int i = 0; i < numdir; i++)
+	{
+		list_destroy(files[i]);
+	}
+
+	set_t *difference;
+	set_t *nonspam_union;
+	set_t *spam_intersection;
+
+	// Spam intersection
+    spam_intersection = set_intersection(set_intersection(spam_words[0], spam_words[1]), set_intersection(spam_words[2], spam_words[3]));
+	//nonspam_union = set_union(set_union(non_spam_words[0], non_spam_words[1]), set_union(non_spam_words[2], non_spam_words[3]));
 
     return 0;
 }

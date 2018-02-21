@@ -22,6 +22,7 @@ void tokenize_file(FILE *file, list_t *list)
     {
 		/* Skip non-letters */
 		fscanf(file, "%*[^a-zA-Z0-9'_]");
+        
 		/* Scan up to 100 letters */
 		if (fscanf(file, "%100[a-zA-Z0-9'_]", buf) == 1) 
         {
@@ -91,7 +92,7 @@ struct list *find_files(char *root)
         perror("pclose");
         fatal_error("pclose() failed");
     }
-    
+
     list_sort(files);
     free(command);    
     return files;
