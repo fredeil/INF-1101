@@ -106,8 +106,14 @@ int main(int argc, char **argv)
 	set_t *spam_intersection;
 
 	// Spam intersection
+	nonspam_union = set_union(set_union(non_spam_words[0], non_spam_words[1]), set_union(non_spam_words[2], non_spam_words[3]));
     spam_intersection = set_intersection(set_intersection(spam_words[0], spam_words[1]), set_intersection(spam_words[2], spam_words[3]));
-	//nonspam_union = set_union(set_union(non_spam_words[0], non_spam_words[1]), set_union(non_spam_words[2], non_spam_words[3]));
+	difference = set_difference(spam_intersection, nonspam_union);
+
+	
+	set_destroy(difference);
+	set_destroy(nonspam_union);
+	set_destroy(spam_intersection);
 
     return 0;
 }
