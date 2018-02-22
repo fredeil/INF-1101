@@ -65,7 +65,6 @@ int main(int argc, char **argv)
 	int numdir = argc - 1;
 	set_t *mail_words[5], *spam_words[4], *non_spam_words[4];
 
-
 	if (argc != 4) 
 	{
 		fprintf(stderr, "usage: %s <spamdir> <nonspamdir> <maildir>\n", argv[0]);
@@ -96,11 +95,6 @@ int main(int argc, char **argv)
 		list_destroyiter(file_iter);
 	}
 
-	// Clean up files
-	for(int i = 0; i < numdir; i++)
-	{
-		list_destroy(files[i]);
-	}
 
 	set_t *difference;
 	set_t *nonspam_union;
@@ -123,11 +117,32 @@ int main(int argc, char **argv)
 	// Subtract spam and non spam
 	difference = set_difference(spam_intersection, nonspam_union);
 
+	list_iter_t *iter = list_createiter(files[2]);
+
+    for(int i = 0; i < 5; i ++)
+	{
+		set_t *set = set_intersection(mail_words[i], difference);
+		int count = set_size(set);
+		char* str = count == 0 ? "Non spam" : "SPAM";
+		printf("%s: %d spam word(s) -> %s\n", (char*)list_next(iter), count, str);
+		set_destroy(set);
+	}
+
+	// Clean up files
+	for(int i = 0; i < numdir; i++)
+	{
+		list_destroy(files[i]);
+	}
+
+	for(int i = 0; i < 4; i++)
+	{
+		set_destroy(spam_words[i]);
+		set_destroy(non_spam_words[i]);
+	}
+
+	list_destroyiter(iter);
 	set_destroy(difference);
 	set_destroy(nonspam_union);
 	set_destroy(spam_intersection);
-
-	//set_t *mail_words[4], *spam_words[3], *non_spam_words[3];
-
     return 0;
 }

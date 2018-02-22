@@ -10,7 +10,7 @@ static int compare_ints(void *a, void *b)
     return (*ia)-(*ib);
 }
 
-static void *newint(int i)
+static void* newint(int i)
 {
     int *p = malloc(sizeof(int));
     *p = i;
