@@ -12,8 +12,6 @@ Some implementation details were given for the ordered set. The supported operat
 7. Iterating over the elements of the set, in sorted order.
 8. No upper bound on the number of elements that may be inserted into the set.
 
-The assignment also stated that the performance analyzis of the seven supported operations, which can be different between multiple implementations, had to be documented in the report.
-
 ### 1.1 Applications
 The intention of the set ADT is to use it for an easy but naive implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
 
@@ -38,18 +36,24 @@ When deciding on which way to implement the sorted set, two alternatives were co
 
 The sorted set implementation was done using the linked list implementation given in the precode. This is by far the slowest (in terms of run time), naive and reckless implementation (compared to other implementations). Very little effort went into optimizing the code. As long as the tests passed, it was fine. The positive part of this implementation was its low development cost (time), which was the prioritized factor for this assignment.
 
-
+The caveat of using a linked list implementation for the set was definitely the sorting algorithm. This is due to the fact that the set had to be a *sorted* set, hence, the sort of the linked list had to be invoked on every add call.
 
 ## 4. Discussion
-In this section, the choices and the following consequences will be discussed. 
-![Something](./assets/intersection.png)
+For benchmarking the `set_add` function, three sets of data with 450 elements were generated, one with random numbers, one with increasingly larger numbers and one with a constant value. 
+
+The figure below depicts three different types of complexity. The worst case was with random numbers (blue graph), which is O(n * lg n), second worst was the increasingly larger numbers (orange graph) which follows a more linear time complexity of O(n) and the third and the best case was when adding the constant value (red graph).
+
+The best case scenario was due to the fact that the `set_add` function, which invoked a mergesort sorting algorithm, never had to sort anything. The worst case scenario was due to the `set_add` having to sort the set on every call.
+
+![Add](./assets/add.png)
+
+The `set_intersection`, which has an identical time complexity as `set_difference` and `set_union`, had a time complexity of O(n). This is due to linked list `list_contains` having a time complexity of O(n).
+![Intersection](./assets/intersection.png)
 
 ## 5. Conclusion
-Something
+Apart from a few, minor caveats, the code is working as intended. There are obvious improvements to be done in the implementation of the set, but poor design choices were taken due to some time constraints.
+
 
 ## References
 <b id="f1">1</b> Robert Sedgewick, 1997. Algorithms in C, Parts 1-4: Fundamentals, Data Structures,
 Sorting, Searching: Fundamentals, Data Structures, Sorting, Searching. 3 Edition.
-Addison-Wesley Professional.  [↩](#a1)
-
-<b id="f1">2</b> http://something.org [↩](#a2)
