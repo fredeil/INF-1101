@@ -1,5 +1,5 @@
 # INF-1101 - fei003 - a1
-This report details the implementation of a a set, more specifically an *ordered set*, which was used as the underlying data structure for a "spam filter" program. The results of the implementations are also benchmarked and tested thorougly.
+This report details the implementation of a a set, more specifically an *ordered set*, which was used as the underlying data structure for a "spam filter" program. The results of the implementations are also tested and benchmarked.
 
 ## 1. Implementation requirements
 Some implementation details were given for the ordered set. The supported operations are:
@@ -15,25 +15,34 @@ Some implementation details were given for the ordered set. The supported operat
 The assignment also stated that the performance analyzis of the seven supported operations, which can be different between multiple implementations, had to be documented in the report.
 
 ### 1.1 Applications
+The intention of the set ADT is to use it for an easy but naive implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
 
+An e-mail `M` is classified as spam if, and only if
+
+M &#8745; (( S1 &#8745; S2 &#8745; ... &#8745; Sn) - (N1 &#8746; N2 &#8746; ... &#8746; Sm)) &#8800; &#8709;
+
+where `Sn` is the spam words, `Nm` is the non-spam words. This states that if an e-mail is spam if it contains a word that occurs in *all* of the spam e-mails and *none* of the non-spam e-mails.
 
 ## 2. Theoretical background
 <sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
+
 What this inherently means, is that the same set of operations can have several different implementations, and that the client can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
 
 In order to evaluate the effectivenes, or rather, the complexity of an algorithm, this report will use a mathematical notation called *Big O*. Big O is used  (in computer science) to classify an algorithms running time, or space requirements, as the input size increases. The mathematical definition will not be included in this report.
 
-For implementing an ordered set as an ADT, an interface that described the operations with its return types and what not, was given in the precode (see [src/](./src/)).
+For implementing an ordered set as an ADT, an interface that described the operations with its return types was predefined in the precode (see source).
+
 
 ## 3. Implementation
 When deciding on which way to implement the sorted set, two alternatives were considered. One that would have low development cost but high performance cost and vice versa. These are trade offs that often has to be considered in real life situations when developing software (i.e., development cost vs optimal performance), so this was a good exercise.
 
-The results of the different implementations are explained and depicted in the discussion section of this report.
+The sorted set implementation was done using the linked list implementation given in the precode. This is by far the slowest (in terms of run time), naive and reckless implementation (compared to other implementations). Very little effort went into optimizing the code. As long as the tests passed, it was fine. The positive part of this implementation was its low development cost (time), which was the prioritized factor for this assignment.
 
-The first sorted set implementation was done using the linked list implementation given in the precode. This was by far the slowest (in terms of run time), naive and reckless implementation. Very little effort went into optimizing the code. As long as the tests passed, it was fine. The positive part of this implementation was its low development cost (time).
+
 
 ## 4. Discussion
 In this section, the choices and the following consequences will be discussed. 
+![Something](./assets/intersection.png)
 
 ## 5. Conclusion
 Something
