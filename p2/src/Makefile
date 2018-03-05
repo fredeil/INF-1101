@@ -1,6 +1,5 @@
-## Author: Steffen Viken Valvaag <steffenv@cs.uit.no> 
 LIST_SRC=linkedlist.c
-MAP_SRC=  # Insert the file name of your map implementation here
+MAP_SRC=hashmap.c
 WORDFREQS_SRC=wordfreqs.c common.c $(LIST_SRC) $(MAP_SRC)
 HEADERS=common.h list.h map.h
 

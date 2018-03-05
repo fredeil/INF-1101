@@ -1,4 +1,3 @@
-/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #include "common.h"
 #include "list.h"
 #include "map.h"
