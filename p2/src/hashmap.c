@@ -1,10 +1,14 @@
 #include "map.h"
-#include "list.h"
-#include "common.h"
+
+#define THRESHOLD 10
 
 struct map
 {
-
+    int max_elements;
+    int num_elements;
+    list_t **hashmap;
+    cmpfunc_t cmpfunc;
+    hashfunc_t hashfunc;
 };
 
 map_t *map_create(cmpfunc_t cmpfunc, hashfunc_t hashfunc)
@@ -18,6 +22,7 @@ map_t *map_create(cmpfunc_t cmpfunc, hashfunc_t hashfunc)
     {
         fatal_error("hashfunc null");
     }
+
 
     return NULL;
 }

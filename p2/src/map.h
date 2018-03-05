@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include "common.h"
+#include "list.h"
 
 /*
  * The type of maps.
