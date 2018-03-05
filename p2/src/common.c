@@ -3,8 +3,6 @@
 #include "list.h"
 
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 void fatal_error(char *msg)
 {
@@ -18,20 +16,14 @@ void tokenize_file(FILE *file, list_t *list)
     char buf[101];
     buf[100] = 0;
     
-    while (!feof(file)) 
-    {
+    while (!feof(file)) {
 		/* Skip non-letters */
 		fscanf(file, "%*[^a-zA-Z0-9'_]");
-        
 		/* Scan up to 100 letters */
-		if (fscanf(file, "%100[a-zA-Z0-9'_]", buf) == 1) 
-        {
+		if (fscanf(file, "%100[a-zA-Z0-9'_]", buf) == 1) {
 	    	word = strdup(buf);
 	    	if (word == NULL)
-            {
 				fatal_error("out of memory");
-            }
-
 	    	list_addlast(list, word);
 		}
     }
@@ -45,55 +37,36 @@ struct list *find_files(char *root)
     
     files = list_create(compare_strings);
     command = malloc(strlen(root) + 40);
-
     if (command == NULL)
-    {
         fatal_error("out of memory");
-    }
-
     sprintf(command, "/usr/bin/find %s -not -type d", root);
     f = popen(command, "r");
-
-    if (f == NULL) 
-    {
+    if (f == NULL) {
         perror("popen");
         fatal_error("popen() failed");
     }
-
-    while(!feof(f)) 
-    {
+    while(!feof(f)) {
         char line[300], *path, *p;
         
         /* Read one line of output from the find command */
         if (fgets(line, sizeof(line), f) == NULL)
-        {
             break;
-        } 
-
+        
         /* Strip trailing whitespace */
-        p = line + strlen(line) - 1;
+        p = line+strlen(line)-1;
         while (p >= line && isspace(*p))
-        {
             *p-- = 0;
-        }
             
         /* Copy and add the path to the list */
         path = strdup(line);
         if (path == NULL)
-        {
             fatal_error("out of memory");
-        }
-
         list_addlast(files, path);
     }
-
-    if (pclose(f) < 0) 
-    {
-        perror("pclose");
-        fatal_error("pclose() failed");
+    if (fclose(f) < 0) {
+        perror("fclose");
+        fatal_error("fclose() failed");
     }
-
-    list_sort(files);
     free(command);    
     return files;
 }
@@ -101,4 +74,15 @@ struct list *find_files(char *root)
 int compare_strings(void *a, void *b)
 {
     return strcmp(a, b);
+}
+
+unsigned long hash_string(void *str)
+{
+    unsigned char *p = str;
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *p++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    return hash;
 }

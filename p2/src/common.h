@@ -3,8 +3,6 @@
 #define COMMON_H
 
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 
 struct list;
 
@@ -12,6 +10,11 @@ struct list;
  * The type of comparison functions.
  */
 typedef int (*cmpfunc_t)(void *, void *);
+
+/*
+ * The type of hash functions.
+ */
+typedef unsigned long (*hashfunc_t)(void *);
 
 /*
  * Prints an error message and terminates the program.
@@ -40,5 +43,10 @@ struct list *find_files(char *root);
  * Compares two strings using strcmp().
  */
 int compare_strings(void *a, void *b);
+
+/*
+ * Hashes a string.
+ */
+unsigned long hash_string(void *s);
 
 #endif
