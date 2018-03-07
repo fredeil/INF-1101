@@ -1,8 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <stdlib.h>
 #include "common.h"
 #include "list.h"
+
 
 /*
  * The type of maps.
