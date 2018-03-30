@@ -272,7 +272,7 @@ static void print_title(FILE *fp, char *query)
     char *title;
 
     title = "Simple Search Engine";
-    fprintf(fp, title);
+    fprintf(fp, "%s", title);
 }
 
 static void parse_html_template(FILE *in, FILE *out, char *query)
@@ -288,7 +288,7 @@ static void parse_html_template(FILE *in, FILE *out, char *query)
         if ((tok = strstr(line, "<#=")))
         {
             *tok = 0;
-            fprintf(out, line);
+            fprintf(out, "%s", line);
             *tok = '<';
 
             tok += 3;
@@ -321,11 +321,11 @@ static void parse_html_template(FILE *in, FILE *out, char *query)
                 c = tok - 3;
             }
 
-            fprintf(out, c);
+            fprintf(out, "%s", c);
         }
         else
         {
-            fprintf(out, line);
+            fprintf(out, "%s", line);
         }
     }
 
