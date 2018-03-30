@@ -1,4 +1,3 @@
-/* Author: Aage Kvalnes <aage@cs.uit.no> */
 #ifndef PLOT_H
 #define PLOT_H
 

@@ -1,5 +1,3 @@
-## Author: Steffen Viken Valvaag <steffenv@cs.uit.no>
-
 calculator: calculator.c
 	gcc -Wall -g -o calculator calculator.c plot.c
 
