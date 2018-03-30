@@ -32,4 +32,7 @@ void index_addpath(index_t *index, char *path, list_t *words);
  * is assigned to the given errmsg pointer and the return value
  * will be NULL.
  */
-list_t *index_query(index_t *index, list_t *query, char **errmsg);
+list_t *index_query(index_t *index, list_t *query, char **errmsg)
+{
+    return NULL;
+}

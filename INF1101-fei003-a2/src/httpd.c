@@ -110,8 +110,7 @@ static char *urldecode(char *s)
             break;
         case '%':
             *p = hexdigit(*s++) * 16;
-            *p += hexdigit(*s++);
-            *p++;
+            *p++ += hexdigit(*s++);
             break;
         default:
             *p++ = ch;

@@ -148,8 +148,7 @@ static list_t *tokenize_query(char *query)
         {
             char *s;
             /* Get length of term*/
-            for (s = query; !is_reserved_char(*s) && *s != '\0'; s++)
-                ;
+            for (s = query; !is_reserved_char(*s) && *s != '\0'; s++);
 
             /* Copy term */
             term = substring(query, s);
@@ -175,7 +174,7 @@ static list_t *preprocess_query(char *query)
     list_t *tokens = tokenize_query(query);
     list_t *processed = list_create(compare_strings);
 
-    list_t *iter = list_createiter(tokens);
+    list_iter_t *iter = list_createiter(tokens);
 
     while (list_hasnext(iter))
     {
@@ -218,7 +217,7 @@ static void send_results(FILE *f, char *query, list_t *results)
 
     fprintf(f, "<ol id=\"results\">\n");
 
-    list_t *it = list_createiter(results);
+    list_iter_t *it = list_createiter(results);
 
     while (list_hasnext(it))
     {
@@ -286,7 +285,7 @@ static void print_querystring(FILE *fp, char *query)
 static void print_title(FILE *fp, char *query)
 {
     char *title = "Simple Search Engine";
-    fprintf(fp, title);
+    fprintf(fp, "%s", title);
 }
 
 static void parse_html_template(FILE *in, FILE *out, char *query)
@@ -302,7 +301,7 @@ static void parse_html_template(FILE *in, FILE *out, char *query)
         if ((tok = strstr(line, "<#=")))
         {
             *tok = 0;
-            fprintf(out, line);
+            fprintf(out, "%s", line);
             *tok = '<';
 
             tok += 3;
@@ -338,11 +337,11 @@ static void parse_html_template(FILE *in, FILE *out, char *query)
                 c = tok - 3;
             }
 
-            fprintf(out, c);
+            fprintf(out, "%s", c);
         }
         else
         {
-            fprintf(out, line);
+            fprintf(out, "%s", line);
         }
     }
 
