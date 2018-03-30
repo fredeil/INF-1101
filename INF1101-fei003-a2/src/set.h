@@ -1,4 +1,3 @@
-/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #ifndef SET_H
 #define SET_H
 

@@ -1,5 +1,3 @@
-/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
-
 #include "set.h"
 #include "list.h"
 
@@ -14,7 +12,8 @@ typedef struct treenode treenode_t;
 /*
  * AA tree node.
  */
-struct treenode {
+struct treenode
+{
     treenode_t *left;
     treenode_t *right;
     treenode_t *next;
@@ -23,16 +22,18 @@ struct treenode {
 };
 
 #define nullNode &theNullNode
-static treenode_t theNullNode = { nullNode, nullNode, nullNode, 0, NULL };
+static treenode_t theNullNode = {nullNode, nullNode, nullNode, 0, NULL};
 
-struct set {
-    treenode_t *root;   /* Root of the AA tree */
-    treenode_t *first;  /* Head of the linked list */
+struct set
+{
+    treenode_t *root;  /* Root of the AA tree */
+    treenode_t *first; /* Head of the linked list */
     int size;
     cmpfunc_t cmpfunc;
 };
 
-struct set_iter {
+struct set_iter
+{
     treenode_t *node;
 };
 
@@ -42,7 +43,7 @@ struct set_iter {
 static int max(int a, int b)
 {
     return (a > b) ? a : b;
-}	
+}
 
 /*
  * Returns the maximum depth of a tree.
@@ -56,7 +57,7 @@ static int maxdepth(treenode_t *n)
     else
     {
         return 1 + max(maxdepth(n->left), maxdepth(n->right));
-    }	
+    }
 }
 
 /*
@@ -177,7 +178,7 @@ static treenode_t *skew(treenode_t *root)
         treenode_t *newroot = root->left;
         root->left = newroot->right;
         newroot->right = root;
-        return newroot; 
+        return newroot;
     }
     return root;
 }
@@ -267,12 +268,12 @@ static void buildtree(list_t *list, int N,
         treenode_t *right;      /* root of right subtree */
         treenode_t *rightfirst; /* first node in right subtree */
 
-        buildtree(list, N - N/2 - 1, first, &left, &leftlast);
+        buildtree(list, N - N / 2 - 1, first, &left, &leftlast);
         *root = *last = newnode(list_popfirst(list));
         (*root)->left = left;
         (*root)->level = left->level + 1;
         leftlast->next = *root;
-        buildtree(list, N/2, &rightfirst, &right, last);
+        buildtree(list, N / 2, &rightfirst, &right, last);
         (*root)->right = right;
         (*root)->next = rightfirst;
     }
@@ -289,7 +290,7 @@ static set_t *buildset(list_t *list, cmpfunc_t cmpfunc)
 
     if (size > 0)
     {
-        treenode_t *last;       
+        treenode_t *last;
         buildtree(list, size, &(set->first), &(set->root), &last);
         set->size = size;
     }
@@ -357,7 +358,8 @@ set_t *set_intersection(set_t *a, set_t *b)
     list_t *result;
     treenode_t *na, *nb;
 
-    if (a->cmpfunc != b->cmpfunc) {
+    if (a->cmpfunc != b->cmpfunc)
+    {
         fatal_error("intersection of incompatible sets");
         return NULL;
     }
@@ -399,7 +401,8 @@ set_t *set_difference(set_t *a, set_t *b)
     list_t *result;
     treenode_t *na, *nb;
 
-    if (a->cmpfunc != b->cmpfunc) {
+    if (a->cmpfunc != b->cmpfunc)
+    {
         fatal_error("difference between incompatible sets");
         return NULL;
     }
@@ -493,4 +496,3 @@ void *set_next(set_iter_t *iter)
     iter->node = iter->node->next;
     return elem;
 }
-

@@ -1,10 +1,3 @@
-/* 
- * Authors: 
- * Steffen Viken Valvaag <steffenv@cs.uit.no> 
- * Magnus Stenhaug <magnus.stenhaug@uit.no> 
- * Erlend Helland Graff <erlend.h.graff@uit.no> 
- */
-
 #include "map.h"
 
 #include <stdlib.h>
@@ -68,7 +61,7 @@ map_t *map_create(cmpfunc_t cmpfunc, hashfunc_t hashfunc)
         goto buckets_error;
     }
 
-    return map;   
+    return map;
 
 buckets_error:
     free(map);
@@ -79,7 +72,7 @@ map_error:
 static void freebuckets(int numbuckets, mapentry_t **buckets, void (*destroy_key)(void *), void (*destroy_val)(void *))
 {
     int b;
-    mapentry_t *e, *tmp;    
+    mapentry_t *e, *tmp;
 
     for (b = 0; b < numbuckets; b++)
     {
@@ -90,10 +83,10 @@ static void freebuckets(int numbuckets, mapentry_t **buckets, void (*destroy_key
             e = e->next;
 
             if (destroy_key && tmp->key)
-                destroy_key (tmp->key);
+                destroy_key(tmp->key);
 
             if (destroy_val && tmp->value)
-                destroy_val (tmp->value);
+                destroy_val(tmp->value);
 
             free(tmp);
         }
@@ -103,7 +96,7 @@ static void freebuckets(int numbuckets, mapentry_t **buckets, void (*destroy_key
 
 void map_destroy(map_t *map, void (*destroy_key)(void *), void (*destroy_val)(void *))
 {
-    freebuckets(map->numbuckets, map->buckets, destroy_key, destroy_val);    
+    freebuckets(map->numbuckets, map->buckets, destroy_key, destroy_val);
     free(map);
 }
 
@@ -129,7 +122,7 @@ static void growmap(map_t *map)
         }
     }
     freebuckets(oldnumbuckets, oldbuckets, NULL, NULL);
-}   
+}
 
 void map_put(map_t *map, void *key, void *value)
 {
@@ -150,7 +143,7 @@ void map_put(map_t *map, void *key, void *value)
     }
     else
     {
-        e->value = value;   
+        e->value = value;
     }
 }
 
@@ -189,7 +182,8 @@ void *map_get(map_t *map, void *key)
         fatal_error("key not found in map");
         return NULL;
     }
-    else {
+    else
+    {
         return e->value;
     }
 }

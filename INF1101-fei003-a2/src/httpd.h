@@ -1,9 +1,7 @@
-/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #ifndef HTTPD_H
 #define HTTPD_H
 
 #include "map.h"
-
 #include <stdio.h>
 
 /*

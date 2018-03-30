@@ -1,10 +1,3 @@
-/* 
- * Authors: 
- * Steffen Viken Valvaag <steffenv@cs.uit.no> 
- * Magnus Stenhaug <magnus.stenhaug@uit.no> 
- * Erlend Helland Graff <erlend.h.graff@uit.no> 
- */
-
 #include "httpd.h"
 #include "list.h"
 
@@ -33,7 +26,7 @@ struct http_conn
 
 static char *newstring(int length)
 {
-    char *r = calloc(length+1, 1);
+    char *r = calloc(length + 1, 1);
 
     if (r == NULL)
         fatal_error("out of memory");
@@ -44,16 +37,16 @@ static char *newstring(int length)
 static char *stripstring(char *s, int len)
 {
     char *r;
-    char *end = s+len-1;
+    char *end = s + len - 1;
 
-    while (end >= s && isspace((int) *end))
+    while (end >= s && isspace((int)*end))
         end--;
 
-    while (s <= end && isspace((int) *s))
+    while (s <= end && isspace((int)*s))
         s++;
 
-    r = newstring(end-s+1);
-    strncpy(r, s, end-s+1);
+    r = newstring(end - s + 1);
+    strncpy(r, s, end - s + 1);
     return r;
 }
 
@@ -65,19 +58,19 @@ static int splitstring(char *s, int sep, char **left, char **right)
     if (p == NULL)
         return 0;
 
-    *left = stripstring(s, p-s);
-    *right = stripstring(p+1, strlen(p+1));
-    return 1;    
+    *left = stripstring(s, p - s);
+    *right = stripstring(p + 1, strlen(p + 1));
+    return 1;
 }
 
 static int hexdigit(char ch)
 {
     if (ch >= '0' && ch <= '9')
-        return ch-'0';
+        return ch - '0';
     if (ch >= 'A' && ch <= 'F')
-        return ch-'A'+10;
+        return ch - 'A' + 10;
     if (ch >= 'a' && ch <= 'f')
-        return ch-'a'+10;
+        return ch - 'a' + 10;
 
     fatal_error("bad hex digit");
     return -1;
@@ -88,9 +81,11 @@ static char *urldecode(char *s)
     char *r, *p;
 
     r = p = newstring(strlen(s));
-    for (;;) {    
-        int ch = *s++;        
-        switch(ch) {
+    for (;;)
+    {
+        int ch = *s++;
+        switch (ch)
+        {
         case 0:
             return r;
         case '+':
@@ -112,10 +107,12 @@ char *html_escape(char *s)
 {
     char *r, *p;
 
-    r = p = newstring(strlen(s)*6);
-    for (;;) {
+    r = p = newstring(strlen(s) * 6);
+    for (;;)
+    {
         int ch = *s++;
-        switch(ch) {
+        switch (ch)
+        {
         case 0:
             return r;
         case '<':
@@ -137,7 +134,7 @@ char *html_escape(char *s)
         default:
             *p++ = ch;
             break;
-        }        
+        }
     }
 }
 
@@ -153,9 +150,7 @@ void http_notfound(FILE *f, char *path)
     fprintf(f, "<body><p>The requested path <b>%s</b> was not found.</p></body></html>", path);
 }
 
-typedef
-enum http_methods
-{
+typedef enum http_methods {
     HTTP_GET,
     HTTP_POST
 } http_method_t;
@@ -168,7 +163,7 @@ struct http_header
     map_t *query_fields;
 };
 
-static int http_parse_query (char *query, map_t *fields)
+static int http_parse_query(char *query, map_t *fields)
 {
     char *buf, *p, *tmp, *key, *value;
 
@@ -176,29 +171,29 @@ static int http_parse_query (char *query, map_t *fields)
 
     while (buf)
     {
-        if ((p = strchr (buf, '&')))
+        if ((p = strchr(buf, '&')))
             *p = 0;
         else
             p = NULL;
 
-        if (splitstring (buf, '=', &key, &value))
+        if (splitstring(buf, '=', &key, &value))
         {
             tmp = key;
-            key = urldecode (tmp);
-            free (tmp);
-			
+            key = urldecode(tmp);
+            free(tmp);
+
             tmp = value;
-            value = urldecode (tmp);
-            free (tmp);
-			
-            map_put (fields, key, value);
+            value = urldecode(tmp);
+            free(tmp);
+
+            map_put(fields, key, value);
         }
         else
         {
-            key = newstring (strlen (buf));
-            strcpy (key, buf);
+            key = newstring(strlen(buf));
+            strcpy(key, buf);
             value = "";
-            map_put (fields, key, value);
+            map_put(fields, key, value);
         }
 
         if (p)
@@ -210,40 +205,40 @@ static int http_parse_query (char *query, map_t *fields)
     return 0;
 }
 
-static void http_destroy_header (struct http_header *hdr)
+static void http_destroy_header(struct http_header *hdr)
 {
     if (hdr->path)
     {
-        free (hdr->path);
+        free(hdr->path);
         hdr->path = NULL;
     }
 
     if (hdr->header_fields)
     {
-        map_destroy (hdr->header_fields, free, free);
+        map_destroy(hdr->header_fields, free, free);
         hdr->header_fields = NULL;
     }
 
     if (hdr->header_fields)
     {
-        map_destroy (hdr->query_fields, free, free);
+        map_destroy(hdr->query_fields, free, free);
         hdr->header_fields = NULL;
     }
 }
 
-static int http_parse_request_line (FILE *fp, struct http_header *hdr)
+static int http_parse_request_line(FILE *fp, struct http_header *hdr)
 {
     int fd;
     char *method = NULL, *path = NULL, *line = NULL;
-    struct timeval tv = { .tv_sec = 3, .tv_usec = 0 };
+    struct timeval tv = {.tv_sec = 3, .tv_usec = 0};
     fd_set rdfds;
 
-    fd = fileno (fp);
+    fd = fileno(fp);
 
     FD_ZERO(&rdfds);
     FD_SET(fd, &rdfds);
 
-    if (select (fd + 1, &rdfds, NULL, NULL, &tv) <= 0)
+    if (select(fd + 1, &rdfds, NULL, NULL, &tv) <= 0)
         goto error;
 
     method = newstring(300);
@@ -261,13 +256,13 @@ static int http_parse_request_line (FILE *fp, struct http_header *hdr)
     /* Read and parse the request line */
     if (fscanf(fp, "%300s %300s %*s", method, path) != 2)
     {
-        fprintf (stderr, "Failed to read request line!\n");
+        fprintf(stderr, "Failed to read request line!\n");
         goto error;
     }
 
     /* Read the remainder of the request line */
-    fgets (line, 300, fp);
-    free (line);
+    fgets(line, 300, fp);
+    free(line);
     line = NULL;
 
     if (strcmp(method, "GET") == 0)
@@ -276,11 +271,11 @@ static int http_parse_request_line (FILE *fp, struct http_header *hdr)
         hdr->method = HTTP_POST;
     else
     {
-        fprintf (stderr, "Got unknown HTTP method!\n");
+        fprintf(stderr, "Got unknown HTTP method!\n");
         goto error;
     }
 
-    free (method);
+    free(method);
     method = NULL;
 
     hdr->path = path;
@@ -289,27 +284,27 @@ static int http_parse_request_line (FILE *fp, struct http_header *hdr)
 
 error:
     if (method)
-        free (method);
+        free(method);
 
     if (path)
-        free (path);
+        free(path);
 
     if (line)
-        free (line);
+        free(line);
 
     return -1;
 }
 
-static int http_parse_request_headers (FILE *fp, map_t *fields)
+static int http_parse_request_headers(FILE *fp, map_t *fields)
 {
     char *name, *value, *line;
 
-    line = newstring (300);
+    line = newstring(300);
     if (!line)
         return -1;
 
     /* Read and parse the header fields */
-    while (!feof (fp))
+    while (!feof(fp))
     {
         fgets(line, 300, fp);
         if (strcmp(line, "\r\n") == 0 || strcmp(line, "\n") == 0)
@@ -319,16 +314,16 @@ static int http_parse_request_headers (FILE *fp, map_t *fields)
         }
 
         /* Parse the name and value of the header field */
-        if (splitstring (line, ':', &name, &value))
-            map_put (fields, name, value);
+        if (splitstring(line, ':', &name, &value))
+            map_put(fields, name, value);
     }
 
-    free (line);
+    free(line);
 
     return 0;
 }
 
-static int http_parse_request (FILE *fp, struct http_header *hdr)
+static int http_parse_request(FILE *fp, struct http_header *hdr)
 {
     int len;
     char *query;
@@ -337,40 +332,40 @@ static int http_parse_request (FILE *fp, struct http_header *hdr)
     hdr->header_fields = NULL;
     hdr->query_fields = NULL;
 
-    if (http_parse_request_line (fp, hdr))
+    if (http_parse_request_line(fp, hdr))
         goto error;
 
-    hdr->header_fields = map_create (compare_strings, hash_string);
+    hdr->header_fields = map_create(compare_strings, hash_string);
     if (!hdr->header_fields)
         goto error;
 
-    if (http_parse_request_headers (fp, hdr->header_fields))
+    if (http_parse_request_headers(fp, hdr->header_fields))
         goto error;
 
-    hdr->query_fields = map_create (compare_strings, hash_string);
+    hdr->query_fields = map_create(compare_strings, hash_string);
     if (!hdr->query_fields)
         goto error;
 
     if (hdr->method == HTTP_POST)
     {
-        if (!map_haskey (hdr->header_fields, "Content-Length"))
+        if (!map_haskey(hdr->header_fields, "Content-Length"))
         {
-            fprintf (stderr, "No Content-Length in POST request\n");
+            fprintf(stderr, "No Content-Length in POST request\n");
             goto error;
         }
 
-        len = atoi (map_get (hdr->header_fields, "Content-Length"));
-        query = newstring (len + 1);
-        fread (query, 1, len, fp);
+        len = atoi(map_get(hdr->header_fields, "Content-Length"));
+        query = newstring(len + 1);
+        fread(query, 1, len, fp);
 
-        http_parse_query (query, hdr->query_fields);
-        free (query);
+        http_parse_query(query, hdr->query_fields);
+        free(query);
     }
 
     return 0;
 
 error:
-    http_destroy_header (hdr);
+    http_destroy_header(hdr);
 
     return -1;
 }
@@ -380,7 +375,7 @@ error:
  * Note: do not use file descriptor directly afterwards.
  * File descriptor is closed if streams could not be opened.
  */
-static int http_open_file_streams (int fd, FILE **inf, FILE **outf)
+static int http_open_file_streams(int fd, FILE **inf, FILE **outf)
 {
     int wd;
     FILE *in, *out;
@@ -388,26 +383,26 @@ static int http_open_file_streams (int fd, FILE **inf, FILE **outf)
     *inf = NULL;
     *outf = NULL;
 
-    if (!(in = fdopen (fd, "r")))
+    if (!(in = fdopen(fd, "r")))
     {
         perror("fdopen");
-        close (fd);
+        close(fd);
         return -1;
     }
 
-    if ((wd = dup (fd)) < 0)
+    if ((wd = dup(fd)) < 0)
     {
         perror("dup");
-        fclose (in);
+        fclose(in);
         return -1;
     }
 
-    out = fdopen (wd, "w");
+    out = fdopen(wd, "w");
     if (!out)
     {
         perror("fdopen");
-        close (wd);
-        fclose (in);
+        close(wd);
+        fclose(in);
         return -1;
     }
 
@@ -426,30 +421,30 @@ static void *handle_request(void *arg)
     http_handler_t handler;
 
     /* Get arguments passed to thread */
-    conn = (struct http_conn *) arg;
+    conn = (struct http_conn *)arg;
     s = conn->sock;
     handler = conn->handler;
-    free (conn);
+    free(conn);
 
-    if (http_open_file_streams (s, &inf, &outf))
+    if (http_open_file_streams(s, &inf, &outf))
     {
-        fprintf (stderr, "Failed to open file streams!\n");
+        fprintf(stderr, "Failed to open file streams!\n");
         goto end;
     }
 
-    if (http_parse_request (inf, &hdr))
+    if (http_parse_request(inf, &hdr))
         goto end;
 
-    path = urldecode (hdr.path);
-    free (hdr.path);
+    path = urldecode(hdr.path);
+    free(hdr.path);
 
     /* Invoke the request handler to write the response */
-    status = handler (path, hdr.header_fields, hdr.query_fields, outf);
+    status = handler(path, hdr.header_fields, hdr.query_fields, outf);
 
-    free (path);
+    free(path);
 
-    map_destroy (hdr.header_fields, free, free);
-    map_destroy (hdr.query_fields, free, free);
+    map_destroy(hdr.header_fields, free, free);
+    map_destroy(hdr.query_fields, free, free);
 
 end:
     fclose(inf);
@@ -458,92 +453,92 @@ end:
     return NULL;
 }
 
-static void handle_kill_signal (int signum)
+static void handle_kill_signal(int signum)
 {
     server_is_running = 0;
 }
 
-int setup_kill_signals (void)
+int setup_kill_signals(void)
 {
     struct sigaction sa;
 
-    memset (&sa, 0, sizeof (struct sigaction));
+    memset(&sa, 0, sizeof(struct sigaction));
     sa.sa_handler = handle_kill_signal;
-    sigemptyset (&sa.sa_mask);
+    sigemptyset(&sa.sa_mask);
 
-    if (sigaction (SIGQUIT, &sa, NULL) < 0) 
+    if (sigaction(SIGQUIT, &sa, NULL) < 0)
     {
-        perror ("sigaction");
+        perror("sigaction");
         return -1;
     }
 
-    if (sigaction (SIGTERM, &sa, NULL) < 0) 
+    if (sigaction(SIGTERM, &sa, NULL) < 0)
     {
-        perror ("sigaction");
+        perror("sigaction");
         return -1;
     }
 
-    if (sigaction (SIGHUP, &sa, NULL) < 0) 
+    if (sigaction(SIGHUP, &sa, NULL) < 0)
     {
-        perror ("sigaction");
+        perror("sigaction");
         return -1;
     }
 
-    if (sigaction (SIGINT, &sa, NULL) < 0) 
+    if (sigaction(SIGINT, &sa, NULL) < 0)
     {
-        perror ("sigaction");
+        perror("sigaction");
         return -1;
     }
 
-    if (sigaction (SIGTSTP, &sa, NULL) < 0) 
+    if (sigaction(SIGTSTP, &sa, NULL) < 0)
     {
-        perror ("sigaction");
+        perror("sigaction");
         return -1;
     }
-	
+
     /* Ignore SIGPIPE on sockets */
     sa.sa_handler = SIG_IGN;
-    if (sigaction (SIGPIPE, &sa, NULL) < 0) 
+    if (sigaction(SIGPIPE, &sa, NULL) < 0)
     {
-        perror ("sigaction");
+        perror("sigaction");
         return -1;
     }
 
     return 0;
 }
 
-int open_socket (unsigned short port)
+int open_socket(unsigned short port)
 {
     int sock, yes;
     struct sockaddr_in sin;
 
     sin.sin_family = AF_INET;
-    sin.sin_port = htons (port);
-    sin.sin_addr.s_addr = htonl (INADDR_ANY);
+    sin.sin_port = htons(port);
+    sin.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    sock = socket (AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
     {
-        perror ("socket");
+        perror("socket");
         return -1;
     }
 
     yes = 1;
-    if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof (int)) < 0)
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0)
     {
-        perror ("setsockopt");
+        perror("setsockopt");
         return -1;
     }
 
-    if (bind (sock, (struct sockaddr *) &sin, sizeof(sin)) < 0)
+    if (bind(sock, (struct sockaddr *)&sin, sizeof(sin)) < 0)
     {
-        perror ("bind");
+        perror("bind");
         return -1;
     }
 
-    if (listen (sock, SOMAXCONN) < 0)
+    if (listen(sock, SOMAXCONN) < 0)
     {
-        perror ("listen");
+        perror("listen");
         return -1;
     }
 
@@ -559,20 +554,20 @@ int http_server(unsigned short port, http_handler_t handler)
     int started[MAX_THREADS];
     pthread_t threads[MAX_THREADS];
 
-    setup_kill_signals ();
-	
-    /* Set all threads to NULL */
-    memset (started, 0, sizeof(started));
+    setup_kill_signals();
 
-    sock = open_socket (port);
+    /* Set all threads to NULL */
+    memset(started, 0, sizeof(started));
+
+    sock = open_socket(port);
     if (sock < 0)
     {
-        fprintf (stderr, "Failed to open socket!\n");
+        fprintf(stderr, "Failed to open socket!\n");
         return 1;
     }
 
-    fprintf (stdout, "Running HTTP server!\n");
-	
+    fprintf(stdout, "Running HTTP server!\n");
+
     thidx = 0;
 
     /*
@@ -580,8 +575,8 @@ int http_server(unsigned short port, http_handler_t handler)
      */
     while (server_is_running)
     {
-        len = sizeof (struct sockaddr_in);      
-        t = accept (sock, (struct sockaddr *) &clientaddr, &len);
+        len = sizeof(struct sockaddr_in);
+        t = accept(sock, (struct sockaddr *)&clientaddr, &len);
 
         if (t < 0)
         {
@@ -589,35 +584,35 @@ int http_server(unsigned short port, http_handler_t handler)
             continue;
         }
 
-        conn = malloc (sizeof (struct http_conn));
+        conn = malloc(sizeof(struct http_conn));
         conn->sock = t;
         conn->handler = handler;
-		
+
         if (started[thidx])
-            (void) pthread_join (threads[thidx], NULL);
-		
+            (void)pthread_join(threads[thidx], NULL);
+
         started[thidx] = 1;
 
         /* Launch a threads to handle the connection */
-        if (pthread_create (&threads[thidx], NULL, handle_request, conn))
+        if (pthread_create(&threads[thidx], NULL, handle_request, conn))
         {
             started[thidx] = 0;
-            close (t);
-            free (conn);
+            close(t);
+            free(conn);
         }
-		
+
         thidx = (thidx + 1) % MAX_THREADS;
     }
-	
+
     for (i = 0; i < MAX_THREADS; i++)
     {
         if (started[i])
-            (void) pthread_join (threads[i], NULL);
+            (void)pthread_join(threads[i], NULL);
     }
 
-    fprintf (stdout, "Quitting HTTP server!\n");
+    fprintf(stdout, "Quitting HTTP server!\n");
 
-    close (sock);
+    close(sock);
 
     return 0;
 }

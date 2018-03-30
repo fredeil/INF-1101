@@ -1,4 +1,3 @@
-/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #ifndef INDEX_H
 #define INDEX_H
 
