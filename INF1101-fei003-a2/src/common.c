@@ -20,7 +20,7 @@ void fatal_error(char *msg, ...)
     vfprintf(stderr, msg, args);
     va_end(args);
     fputc('\n', stderr);
-    exit(1);
+    exit(EXIT_FAILURE);
 }
 
 void tokenize_file(const char *filename, list_t *list)

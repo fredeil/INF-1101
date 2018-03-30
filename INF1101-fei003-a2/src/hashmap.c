@@ -1,14 +1,12 @@
 #include "map.h"
 #include <stdlib.h>
 
-struct mapentry
+typedef struct mapentry
 {
     void *key;
     void *value;
     struct mapentry *next;
-};
-
-typedef struct mapentry mapentry_t;
+} mapentry_t;
 
 struct map
 {
@@ -21,59 +19,47 @@ struct map
 
 static mapentry_t *newentry(void *key, void *value, mapentry_t *next)
 {
-    mapentry_t *e;
+    mapentry_t *e = malloc(sizeof(mapentry_t));
 
-    e = malloc(sizeof(mapentry_t));
     if (e == NULL)
     {
         fatal_error("out of memory");
-        goto end;
     }
 
     e->key = key;
     e->value = value;
     e->next = next;
 
-end:
     return e;
 }
 
 map_t *map_create(cmpfunc_t cmpfunc, hashfunc_t hashfunc)
 {
-    map_t *map;
-
-    map = malloc(sizeof(map_t));
+    map_t *map = malloc(sizeof(map_t));
     if (map == NULL)
     {
         fatal_error("out of memory");
-        goto map_error;
     }
 
     map->cmpfunc = cmpfunc;
     map->hashfunc = hashfunc;
     map->size = 0;
     map->numbuckets = 8;
+
     map->buckets = calloc(map->numbuckets, sizeof(mapentry_t *));
     if (map->buckets == NULL)
     {
+        free(map);
         fatal_error("out of memory");
-        goto buckets_error;
     }
 
     return map;
-
-buckets_error:
-    free(map);
-map_error:
-    return NULL;
 }
 
 static void freebuckets(int numbuckets, mapentry_t **buckets, void (*destroy_key)(void *), void (*destroy_val)(void *))
 {
-    int b;
     mapentry_t *e, *tmp;
-
-    for (b = 0; b < numbuckets; b++)
+    for (int b = 0; b < numbuckets; b++)
     {
         e = buckets[b];
 
@@ -107,7 +93,6 @@ void map_destroy(map_t *map, void (*destroy_key)(void *), void (*destroy_val)(vo
 
 static void growmap(map_t *map)
 {
-    int b;
     int oldnumbuckets = map->numbuckets;
     mapentry_t **oldbuckets = map->buckets;
 
@@ -120,7 +105,7 @@ static void growmap(map_t *map)
         fatal_error("out of memory");
     }
 
-    for (b = 0; b < oldnumbuckets; b++)
+    for (int b = 0; b < oldnumbuckets; b++)
     {
         mapentry_t *e = oldbuckets[b];
 
@@ -192,14 +177,11 @@ void *map_get(map_t *map, void *key)
     {
         e = e->next;
     }
-    
+
     if (e == NULL)
     {
         fatal_error("key not found in map");
-        return NULL;
     }
-    else
-    {
-        return e->value;
-    }
+    
+    return e->value;
 }
