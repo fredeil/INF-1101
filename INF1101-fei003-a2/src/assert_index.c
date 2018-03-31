@@ -20,8 +20,7 @@ typedef struct document
 static document_t docs[NUM_DOCS];
 
 /* Generates a random sequence of characters given a seed */
-char *
-generate_string(unsigned int *seed)
+char *generate_string(unsigned int *seed)
 {
     int i;
     int len;
@@ -118,8 +117,7 @@ void validate_index(index_t *ind)
 
             if (hitCount == 0)
             {
-                fatal_error("Document was not returned: term=%s path=%s",
-                            term, docs[i].path);
+                fatal_error("Document was not returned: term=%s path=%s", term, docs[i].path);
             }
 
             list_popfirst(query);

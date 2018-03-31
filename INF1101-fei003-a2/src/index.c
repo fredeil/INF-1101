@@ -20,8 +20,7 @@ void index_destroy(index_t *index)
 /*
  * Adds the given path to the given index, and index the given
  * list of words under that path.
- * NOTE: It is the responsibility of index_addpath() to deallocate (free)
- *       'path' and the contents of the 'words' list.
+ * NOTE: It is the responsibility of index_addpath() to deallocate (free) 'path' and the contents of the 'words' list.
  */
 void index_addpath(index_t *index, char *path, list_t *words)
 {
@@ -37,5 +36,6 @@ void index_addpath(index_t *index, char *path, list_t *words)
  */
 list_t *index_query(index_t *index, list_t *query, char **errmsg)
 {
+    
     return NULL;
 }
