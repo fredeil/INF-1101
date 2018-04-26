@@ -40,29 +40,6 @@ struct set_iter
 };
 
 /*
- * Returns the maximum of two integers.
- */
-static int max(int a, int b)
-{
-    return (a > b) ? a : b;
-}
-
-/*
- * Returns the maximum depth of a tree.
- */
-static int maxdepth(treenode_t *n)
-{
-    if (n == nullNode)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1 + max(maxdepth(n->left), maxdepth(n->right));
-    }
-}
-
-/*
  * Asserts that a node is valid.
  */
 static void checknode(treenode_t *n, cmpfunc_t cmp)

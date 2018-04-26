@@ -9,6 +9,7 @@
 #include "set.h"
 #include "map.h"
 #include "index.h"
+#include "list.h"
 #include "common.h"
 
 struct index
@@ -27,12 +28,6 @@ typedef struct data
     double tf;
     double idf;
 } data_t;
-
-set_t *parse_query(index_t *index, char **errmsg);
-set_t *parse_andterm(index_t *index, char **errmsg);
-set_t *parse_orterm(index_t *index, char **errmsg);
-set_t *parse_term(index_t *index, char **errmsg);
-set_t *parse_andnot(index_t *index, char **errmsg);
 
 data_t *data_create()
 {
@@ -230,10 +225,10 @@ set_t *parse_andterm(index_t *index, char **errmsg)
     return terms;
 }
 
-// Something 
+// Something
 set_t *parse_orterm(index_t *index, char **errmsg)
 {
-    set_t *terms  = parse_term(index, errmsg);
+    set_t *terms = parse_term(index, errmsg);
     if (compare_strings(index->current_word, "OR") == 0)
     {
         if (list_hasnext(index->iterator))
@@ -250,7 +245,8 @@ set_t *parse_term(index_t *index, char **errmsg)
 {
     set_t *set = NULL;
 
-    if (compare_strings(index->current_word, "(") == 0 && list_hasnext(index->iterator))
+    // If the query starts with an opening ()
+    if (compare_strings(index->current_word, "(") == 0)
     {
         if (list_hasnext(index->iterator))
         {
@@ -259,29 +255,29 @@ set_t *parse_term(index_t *index, char **errmsg)
 
         set = parse_query(index, errmsg);
 
-        if (compare_strings(index->current_word, ")") != 0)
-        {
-            *errmsg = "Something went wrong..";
-        }
-        else if (list_hasnext(index->iterator))
+        // if (list_hasnext(index->iterator))
+        // {
+        //     index->current_word = list_next(index->iterator);
+        // }
+
+        // if (compare_strings(index->current_word, ")") != 0)
+        // {
+        //     *errmsg = "Something went wrong..";
+        // }
+        // else if (list_hasnext(index->iterator))
+        // {
+        //     index->current_word = list_next(index->iterator);
+        // }
+    }
+    else if (map_haskey(index->hashmap, index->current_word) == 1)
+    {
+        // This happens if the query has no parenthesis
+
+        set = map_get(index->hashmap, index->current_word);
+
+        if (list_hasnext(index->iterator))
         {
             index->current_word = list_next(index->iterator);
-        }
-    }
-    else
-    {
-        if (map_haskey(index->hashmap, index->current_word) == 1)
-        {
-            set = map_get(index->hashmap, index->current_word);
-
-            if (list_hasnext(index->iterator))
-            {
-                index->current_word = list_next(index->iterator);
-            }
-        }
-        else
-        {
-            *errmsg = "Something went wrong..";
         }
     }
 

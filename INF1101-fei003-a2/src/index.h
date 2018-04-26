@@ -2,6 +2,7 @@
 #ifndef INDEX_H
 #define INDEX_H
 
+#include "set.h"
 #include "list.h"
 
 struct index;
@@ -40,5 +41,12 @@ void index_addpath(index_t *index, char *path, list_t *words);
  * will be NULL.
  */
 list_t *index_query(index_t *index, list_t *query, char **errmsg);
+
+// Parsing functions
+set_t *parse_query(index_t *index, char **errmsg);
+set_t *parse_andterm(index_t *index, char **errmsg);
+set_t *parse_orterm(index_t *index, char **errmsg);
+set_t *parse_term(index_t *index, char **errmsg);
+set_t *parse_andnot(index_t *index, char **errmsg);
 
 #endif
