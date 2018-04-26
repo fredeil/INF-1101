@@ -23,7 +23,6 @@ typedef unsigned long (*hashfunc_t)(void *);
  */
 void fatal_error(char *msg, ...);
 
-
 /*
  * Reads the given file, and parses it into words (tokens).
  * Adds the words to the given list, in the same order that they
@@ -63,22 +62,20 @@ int compare_pointers(void *a, void *b);
  * a new string (it will be allocated using malloc).
  */
 char *
-concatenate_strings (int num_strings, const char *first, ...);
+concatenate_strings(int num_strings, const char *first, ...);
 
 /*
  * Checks if the given 'dirpath' is a valid directory.
  * 1 = valid
  * 0 = invalid
  */
-int
-is_valid_directory (const char *dirpath);
+int is_valid_directory(const char *dirpath);
 
 /*
  * Checks if the given 'filepath' is a valid regular file.
  * 1 = valid
  * 0 = invalid
  */
-int
-is_valid_file (const char *filepath);
+int is_valid_file(const char *filepath);
 
 #endif

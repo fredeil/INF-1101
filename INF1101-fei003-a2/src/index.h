@@ -7,12 +7,11 @@
 struct index;
 typedef struct index index_t;
 
-typedef
-struct query_result
+typedef struct query_result
 {
-	char *path;    /* Document path */
-	double score;  /* Document to query score */
-}query_result_t;
+	char *path;   /* Document path */
+	double score; /* Document to query score */
+} query_result_t;
 
 /*
  * Creates a new, empty index.
@@ -43,5 +42,3 @@ void index_addpath(index_t *index, char *path, list_t *words);
 list_t *index_query(index_t *index, list_t *query, char **errmsg);
 
 #endif
-
-
