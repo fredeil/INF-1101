@@ -12,7 +12,7 @@ HEADERS=common.h httpd.h list.h set.h map.h index.h
 all: indexer assert_index
 
 indexer: $(INDEXER_SRC) $(HEADERS) Makefile
-	gcc -o $@ $(INDEXER_SRC) -g -lpthread -lm
+	gcc -Wall -o $@ -D_GNU_SOURCE -D_REENTRANT $(INDEXER_SRC) -g -lpthread -lm
 
 assert_index: $(ASSERT_SRC) $(HEADERS) Makefile
 	gcc -o $@ $(ASSERT_SRC) -g -lm

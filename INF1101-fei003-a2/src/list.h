@@ -1,3 +1,4 @@
+/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #ifndef LIST_H
 #define LIST_H
 

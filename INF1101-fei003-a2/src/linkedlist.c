@@ -1,27 +1,26 @@
+/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #include "list.h"
+
 #include <stdlib.h>
 
 struct listnode;
 
 typedef struct listnode listnode_t;
 
-struct listnode
-{
+struct listnode {
     listnode_t *next;
     listnode_t *prev;
     void *elem;
 };
 
-struct list
-{
+struct list {
     listnode_t *head;
     listnode_t *tail;
     int size;
     cmpfunc_t cmpfunc;
 };
 
-struct list_iter
-{
+struct list_iter {
     listnode_t *node;
 };
 
@@ -164,7 +163,7 @@ void *list_poplast(list_t *list)
 int list_contains(list_t *list, void *elem)
 {
     listnode_t *node = list->head;
-    while (node != NULL)
+    while (node != NULL) 
     {
         if (list->cmpfunc(elem, node->elem) == 0)
             return 1;
@@ -305,8 +304,7 @@ static void list_selection_sort(list_t *list)
             if (list->cmpfunc(j->elem, min->elem) < 0)
                 min = j;
         }
-        if (min != i)
-        {
+        if (min != i) {
             void *tmp = min->elem;
             min->elem = i->elem;
             i->elem = tmp;
@@ -351,3 +349,4 @@ void *list_next(list_iter_t *iter)
     iter->node = iter->node->next;
     return elem;
 }
+

@@ -1,3 +1,4 @@
+/* Author: Steffen Viken Valvaag <steffenv@cs.uit.no> */
 #ifndef MAP_H
 #define MAP_H
 
