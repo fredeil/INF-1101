@@ -245,41 +245,41 @@ set_t *parse_term(index_t *index, char **errmsg)
 {
     set_t *set = NULL;
 
-    // If the query starts with an opening ()
-    if (compare_strings(index->current_word, "(") == 0)
-    {
-        if (list_hasnext(index->iterator))
-        {
-            index->current_word = list_next(index->iterator);
-        }
+    // // If the query starts with an opening ()
+    // if (compare_strings(index->current_word, "(") == 0)
+    // {
+    // //     if (list_hasnext(index->iterator))
+    // //     {
+    // //         index->current_word = list_next(index->iterator);
+    // //     }
 
-        set = parse_query(index, errmsg);
+    //     set = parse_query(index, errmsg);
 
-        // if (list_hasnext(index->iterator))
-        // {
-        //     index->current_word = list_next(index->iterator);
-        // }
+    //     // if (list_hasnext(index->iterator))
+    //     // {
+    //     //     index->current_word = list_next(index->iterator);
+    //     // }
 
-        // if (compare_strings(index->current_word, ")") != 0)
-        // {
-        //     *errmsg = "Something went wrong..";
-        // }
-        // else if (list_hasnext(index->iterator))
-        // {
-        //     index->current_word = list_next(index->iterator);
-        // }
-    }
-    else if (map_haskey(index->hashmap, index->current_word) == 1)
-    {
-        // This happens if the query has no parenthesis
+    //     // if (compare_strings(index->current_word, ")") != 0)
+    //     // {
+    //     //     *errmsg = "Something went wrong..";
+    //     // }
+    //     // else if (list_hasnext(index->iterator))
+    //     // {
+    //     //     index->current_word = list_next(index->iterator);
+    //     // }
+    // }
+    // if (map_haskey(index->hashmap, index->current_word) == 1)
+    // {
+    //     // This happens if the query has no parenthesis
 
-        set = map_get(index->hashmap, index->current_word);
+    //     set = map_get(index->hashmap, index->current_word);
 
-        if (list_hasnext(index->iterator))
-        {
-            index->current_word = list_next(index->iterator);
-        }
-    }
+    //     if (list_hasnext(index->iterator))
+    //     {
+    //         index->current_word = list_next(index->iterator);
+    //     }
+    // }
 
     return set;
 }
