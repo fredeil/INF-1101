@@ -14,6 +14,8 @@
 #include <pthread.h>
 #include <ctype.h>
 
+
+#define DEBUG 0
 #define PORT_NUM 8080
 
 static pthread_mutex_t query_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -481,7 +483,10 @@ int main(int argc, char **argv)
     {
         relpath = (char *)list_next(iter);
         fullpath = concatenate_strings(2, root_dir, relpath);
+
+        #if DEBUG
         printf("Indexing %s\n", fullpath);
+        #endif
 
         words = list_create((cmpfunc_t)strcmp);
         tokenize_file(fullpath, words);
