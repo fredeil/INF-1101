@@ -20,32 +20,20 @@ struct index
     list_iter_t *iterator;
 };
 
-typedef struct data
+typedef struct doc
 {
     char *path;
-    double term_in_document;
-    double terms_in_document;
-    double tf;
-    double idf;
-} data_t;
+    double termt;
+    double nterms;
+} doc_t;
 
-data_t *data_create()
+// Compares the paths inside two given docs
+int compare_docs(void *a, void *b)
 {
-    data_t *d = calloc(1, sizeof(data_t));
-    if (d == NULL)
-    {
-        fatal_error("Out of memory");
-    }
-
-    return d;
+    return compare_strings(((doc_t *)a)->path, ((doc_t *)b)->path);
 }
 
-// TODO:
-void data_destroy(data_t *d)
-{
-   
-}
-
+// Creates a new, empty index
 index_t *index_create()
 {
     index_t *index = calloc(1, sizeof(index_t));
@@ -54,14 +42,12 @@ index_t *index_create()
         fatal_error("Out of memory");
     }
 
-    index->num_docs = 0;
-    index->iterator = NULL;
-    index->current_word = NULL;
     index->hashmap = map_create(compare_strings, hash_string);
 
     return index;
 }
 
+// Destroys the given index
 void index_destroy(index_t *index)
 {
     map_destroy(index->hashmap, free, free);
@@ -73,20 +59,20 @@ void index_destroy(index_t *index)
     free(index);
 }
 
-int compare_data(void *a, void *b)
-{
-    return compare_strings(((data_t *)a)->path, ((data_t *)b)->path);
-}
+
 
 /*
- * Adds the given path to the given index, and index the given
- * list of words under that path.
+ * 
  * NOTE: It is the responsibility of index_addpath() to deallocate (free)
  *       'path' and the contents of the 'words' list.
  */
+
+// Adds the given path to the given index, and index the given list of words under that path
 void index_addpath(index_t *index, char *path, list_t *words)
 {
+    index->num_docs++;
     list_iter_t *iter = list_createiter(words);
+    
     while (list_hasnext(iter))
     {
         char *current_word = list_next(iter);
@@ -97,15 +83,15 @@ void index_addpath(index_t *index, char *path, list_t *words)
             set_t *set = map_get(index->hashmap, current_word);
 
             // Check if the set contains our path
-            if (set_contains(set, &(data_t){.path = path}) == 1)
+            if (set_contains(set, &(doc_t){.path = path}) == 1)
             {
                 set_iter_t *iter = set_createiter(set);
                 while (set_hasnext(iter))
                 {
-                    data_t *data = set_next(iter);
-                    if (compare_strings(data->path, path) == 0)
+                    doc_t *doc = set_next(iter);
+                    if (compare_strings(doc->path, path) == 0)
                     {
-                        data->term_in_document++;
+                        doc->termt++;
                         break;
                     }
                 }
@@ -115,30 +101,39 @@ void index_addpath(index_t *index, char *path, list_t *words)
             else
             {
                 // Set didn't contain the data, so we create it
-                data_t *data = data_create();
-                data->path = path;
-                data->term_in_document = 1;
-                data->terms_in_document = list_size(words);
-                set_add(set, data);
+                doc_t *doc = calloc(1, sizeof(doc_t));
+                if (doc == NULL)
+                {
+                    fatal_error("Out of memory");
+                }
+
+                doc->path = path;
+                doc->termt = 1;
+                doc->nterms = list_size(words);
+                set_add(set, doc);
             }
         }
         else
         {
             // Insert new word into hashmap
-            data_t *data = data_create();
-            set_t *set = set_create(compare_data);
+            doc_t *doc = calloc(1, sizeof(doc_t));
+            if (doc == NULL)
+            {
+                fatal_error("Out of memory");
+            }
 
-            data->path = path;
-            data->term_in_document = 1;
-            data->terms_in_document = list_size(words);
+            set_t *set = set_create(compare_docs);
 
-            set_add(set, data);
+            doc->path = path;
+            doc->termt = 1;
+            doc->nterms = list_size(words);
+
+            set_add(set, doc);
             map_put(index->hashmap, current_word, set);
         }
     }
 
     list_destroyiter(iter);
-    index->num_docs++;
 }
 
 int compare_query(void *a, void *b)
@@ -168,12 +163,14 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
         while (set_hasnext(iter))
         {
             query_result_t *query_result = malloc(sizeof(query_result_t));
-            data_t *data = set_next(iter);
-            data->tf = data->term_in_document / data->terms_in_document;
-            data->idf = log(index->num_docs / ((double)set_size(set)));
-
-            query_result->path = data->path;
-            query_result->score = data->tf * data->idf;
+            if(query_result == NULL)
+            {
+                fatal_error("Out of memory");
+            }
+            
+            doc_t *doc = set_next(iter);
+            query_result->path = doc->path;
+            query_result->score = (doc->termt / doc->nterms) * log(index->num_docs / (double)set_size(set));
             list_addfirst(list, query_result);
         }
 
