@@ -183,13 +183,7 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
         list_sort(list);
     }
 
-#if DEBUG
-    if (set == NULL)
-        puts("Set null");
-#endif
-
     list_destroyiter(index->iterator);
-
     return list;
 }
 
