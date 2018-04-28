@@ -1,5 +1,5 @@
-# INF-1101 - fei003 - a1
-This report details the implementation of a a set, more specifically an *ordered set*, which was used as the underlying data structure for a "spam filter" program. The results of the implementations are also tested and benchmarked.
+# INF-1101 - fei003 - a2
+This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter the indexed documents. The indexer is then used in a simple search engine application. 
 
 ## 1. Implementation requirements
 Some implementation details were given for the ordered set. The supported operations are:
@@ -13,7 +13,7 @@ Some implementation details were given for the ordered set. The supported operat
 8. No upper bound on the number of elements that may be inserted into the set.
 
 ### 1.1 Applications
-The intention of the set ADT is to use it for an easy but naive implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
+The intention of the index ADT is to use it for an easy but naive implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
 
 An e-mail `M` is classified as spam if, and only if
 
