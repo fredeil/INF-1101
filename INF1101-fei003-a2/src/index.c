@@ -12,6 +12,8 @@
 #include "list.h"
 #include "common.h"
 
+#define DEBUG 1
+
 struct index
 {
     map_t *hashmap;
@@ -45,12 +47,12 @@ index_t *index_create()
     return index;
 }
 
+
 // Destroys the given index
 void index_destroy(index_t *index)
 {
-    map_destroy(index->hashmap, free, free);
-    if (index->iterator != NULL)
-        list_destroyiter(index->iterator);
+    map_destroy(index->hashmap, free, (void*)set_destroy);
+    list_destroyiter(index->iterator);
 
     free(index);
 }
@@ -60,7 +62,7 @@ void index_addpath(index_t *index, char *path, list_t *words)
 {
     index->num_docs++;
     list_iter_t *iter = list_createiter(words);
-    
+
     while (list_hasnext(iter))
     {
         char *current_word = list_next(iter);
@@ -71,7 +73,13 @@ void index_addpath(index_t *index, char *path, list_t *words)
             set_t *set = map_get(index->hashmap, current_word);
 
             // Check if the set contains our path
-            if (set_contains(set, &(doc_t){.path = path}) == 1)
+            doc_t *doc = calloc(1, sizeof(doc_t));
+            if(doc == NULL)
+                fatal_error("Out of memory.");
+            
+            doc->path = strdup(path);
+
+            if (set_contains(set, doc) == 1)
             {
                 set_iter_t *iter = set_createiter(set);
                 while (set_hasnext(iter))
@@ -84,6 +92,8 @@ void index_addpath(index_t *index, char *path, list_t *words)
                     }
                 }
 
+                free(doc->path);
+                free(doc);
                 set_destroyiter(iter);
             }
             else
@@ -91,13 +101,12 @@ void index_addpath(index_t *index, char *path, list_t *words)
                 // Set didn't contain the data, so we create it
                 doc_t *doc = calloc(1, sizeof(doc_t));
                 if (doc == NULL)
-                {
                     fatal_error("Out of memory");
-                }
 
-                doc->path = path;
                 doc->termt = 1;
+                doc->path = strdup(path);
                 doc->nterms = list_size(words);
+
                 set_add(set, doc);
             }
         }
@@ -133,6 +142,7 @@ int compare_query(void *a, void *b)
 list_t *index_query(index_t *index, list_t *query, char **errmsg)
 {
     index->iterator = list_createiter(query);
+
     if (list_hasnext(index->iterator))
         index->current_word = list_next(index->iterator);
 
@@ -147,9 +157,9 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
         while (set_hasnext(iter))
         {
             query_result_t *query_result = malloc(sizeof(query_result_t));
-            if(query_result == NULL)
+            if (query_result == NULL)
                 fatal_error("Out of memory");
-            
+
             doc_t *doc = set_next(iter);
             query_result->path = doc->path;
             query_result->score = (doc->termt / doc->nterms) * log(index->num_docs / (double)set_size(set));
@@ -157,10 +167,15 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
         }
 
         set_destroyiter(iter);
+        list_sort(list);
     }
 
+#if DEBUG
+    if (set == NULL)
+        puts("Set null");
+#endif
+
     list_destroyiter(index->iterator);
-    list_sort(list);
 
     return list;
 }
@@ -230,8 +245,6 @@ set_t *parse_term(index_t *index, char **errmsg)
     // "(" query ")"
     if (compare_strings(index->current_word, "(") == 0)
     {
-        if (list_hasnext(index->iterator))
-            index->current_word = list_next(index->iterator);
 
         set = parse_query(index, errmsg);
 
@@ -239,19 +252,25 @@ set_t *parse_term(index_t *index, char **errmsg)
             index->current_word = list_next(index->iterator);
 
         if (compare_strings(index->current_word, ")") != 0)
-            *errmsg = "Something went wrong..";
+        {
+            *errmsg = "Missing \")\"";
+            return NULL;
+        }
 
-        else if (list_hasnext(index->iterator))
+        if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
     }
 
     // <word>
     if (map_haskey(index->hashmap, index->current_word) == 1)
     {
-        // This happens if the query has no parenthesis
         set = map_get(index->hashmap, index->current_word);
         if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
+
+#if DEBUG
+        printf("%s\n", index->current_word);
+#endif
     }
 
     return set;
