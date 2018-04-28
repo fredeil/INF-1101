@@ -198,7 +198,7 @@ static int http_parse_query(char *query, map_t *fields)
         else
         {
             key = newstring(strlen(buf));
-            strcpy(key, buf);
+            strcat(key, buf);
             value = "";
             map_put(fields, key, value);
         }

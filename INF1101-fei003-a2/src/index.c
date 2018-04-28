@@ -156,6 +156,7 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
 
         while (set_hasnext(iter))
         {
+
             query_result_t *query_result = malloc(sizeof(query_result_t));
             if (query_result == NULL)
                 fatal_error("Out of memory");
@@ -230,6 +231,9 @@ set_t *parse_orterm(index_t *index, char **errmsg)
         if (list_hasnext(index->iterator))
         {
             index->current_word = list_next(index->iterator);
+            #if DEBUG
+                printf("ORTERM: %s\n", index->current_word);
+            #endif
             return set_union(term, parse_orterm(index, errmsg));
         }
     }
@@ -245,6 +249,8 @@ set_t *parse_term(index_t *index, char **errmsg)
     // "(" query ")"
     if (compare_strings(index->current_word, "(") == 0)
     {
+        if (list_hasnext(index->iterator))
+            index->current_word = list_next(index->iterator);
 
         set = parse_query(index, errmsg);
 
@@ -265,11 +271,12 @@ set_t *parse_term(index_t *index, char **errmsg)
     if (map_haskey(index->hashmap, index->current_word) == 1)
     {
         set = map_get(index->hashmap, index->current_word);
+        
         if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
 
 #if DEBUG
-        printf("%s\n", index->current_word);
+        printf("PARSE_TERM: %s\n", index->current_word);
 #endif
     }
 
