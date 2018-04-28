@@ -47,13 +47,25 @@ index_t *index_create()
     return index;
 }
 
+void free_set(set_t *set)
+{
+    set_iter_t *iter = set_createiter(set);
+
+    while (set_hasnext(iter))
+    {
+        doc_t *doc = set_next(iter);
+        free(doc->path);
+        free(doc);
+    }
+
+    set_destroyiter(iter);
+    set_destroy(set);
+}
 
 // Destroys the given index
 void index_destroy(index_t *index)
 {
-    map_destroy(index->hashmap, free, (void*)set_destroy);
-    list_destroyiter(index->iterator);
-
+    map_destroy(index->hashmap, free, (void *)free_set);
     free(index);
 }
 
@@ -61,11 +73,11 @@ void index_destroy(index_t *index)
 void index_addpath(index_t *index, char *path, list_t *words)
 {
     index->num_docs++;
-    list_iter_t *iter = list_createiter(words);
+    int nwords = list_size(words);
 
-    while (list_hasnext(iter))
+    while (list_size(words) != 0)
     {
-        char *current_word = list_next(iter);
+        char *current_word = list_popfirst(words);
 
         // Word was already inserted to the hashmap
         if (map_haskey(index->hashmap, current_word) == 1)
@@ -74,9 +86,9 @@ void index_addpath(index_t *index, char *path, list_t *words)
 
             // Check if the set contains our path
             doc_t *doc = calloc(1, sizeof(doc_t));
-            if(doc == NULL)
+            if (doc == NULL)
                 fatal_error("Out of memory.");
-            
+
             doc->path = strdup(path);
 
             if (set_contains(set, doc) == 1)
@@ -105,7 +117,7 @@ void index_addpath(index_t *index, char *path, list_t *words)
 
                 doc->termt = 1;
                 doc->path = strdup(path);
-                doc->nterms = list_size(words);
+                doc->nterms = nwords;
 
                 set_add(set, doc);
             }
@@ -119,16 +131,16 @@ void index_addpath(index_t *index, char *path, list_t *words)
 
             set_t *set = set_create(compare_docs);
 
-            doc->path = path;
             doc->termt = 1;
-            doc->nterms = list_size(words);
+            doc->nterms = nwords;
+            doc->path = strdup(path);
 
             set_add(set, doc);
             map_put(index->hashmap, current_word, set);
         }
     }
 
-    list_destroyiter(iter);
+    free(path);
 }
 
 int compare_query(void *a, void *b)
@@ -193,8 +205,8 @@ set_t *parse_query(index_t *index, char **errmsg)
         if (list_hasnext(index->iterator))
         {
             index->current_word = list_next(index->iterator);
-            return set_difference(term, parse_query(index, errmsg));
         }
+        return set_difference(term, parse_query(index, errmsg));
     }
 
     return term;
@@ -212,8 +224,8 @@ set_t *parse_andterm(index_t *index, char **errmsg)
         if (list_hasnext(index->iterator))
         {
             index->current_word = list_next(index->iterator);
-            return set_intersection(term, parse_andterm(index, errmsg));
         }
+        return set_intersection(term, parse_andterm(index, errmsg));
     }
 
     return term;
@@ -231,11 +243,8 @@ set_t *parse_orterm(index_t *index, char **errmsg)
         if (list_hasnext(index->iterator))
         {
             index->current_word = list_next(index->iterator);
-            #if DEBUG
-                printf("ORTERM: %s\n", index->current_word);
-            #endif
-            return set_union(term, parse_orterm(index, errmsg));
         }
+        return set_union(term, parse_orterm(index, errmsg));
     }
 
     return term;
@@ -271,13 +280,8 @@ set_t *parse_term(index_t *index, char **errmsg)
     if (map_haskey(index->hashmap, index->current_word) == 1)
     {
         set = map_get(index->hashmap, index->current_word);
-        
         if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
-
-#if DEBUG
-        printf("PARSE_TERM: %s\n", index->current_word);
-#endif
     }
 
     return set;
