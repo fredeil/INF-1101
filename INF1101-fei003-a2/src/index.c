@@ -32,6 +32,9 @@ typedef struct doc
 // Compares the paths inside two given docs
 int compare_docs(void *a, void *b)
 {
+    if(a == NULL || b == NULL)
+        return -1;
+
     return compare_strings(((doc_t *)a)->path, ((doc_t *)b)->path);
 }
 
@@ -84,7 +87,7 @@ void index_addpath(index_t *index, char *path, list_t *words)
         {
             set_t *set = map_get(index->hashmap, current_word);
 
-            // Check if the set contains our path
+            // Check if the set contains our doc
             doc_t *doc = calloc(1, sizeof(doc_t));
             if (doc == NULL)
                 fatal_error("Out of memory.");
@@ -110,7 +113,7 @@ void index_addpath(index_t *index, char *path, list_t *words)
             }
             else
             {
-                // Set didn't contain the data, so we create it
+                // Set didn't contain the doc
                 doc_t *doc = calloc(1, sizeof(doc_t));
                 if (doc == NULL)
                     fatal_error("Out of memory");
@@ -153,6 +156,7 @@ int compare_query(void *a, void *b)
 
 list_t *index_query(index_t *index, list_t *query, char **errmsg)
 {
+
     index->iterator = list_createiter(query);
 
     if (list_hasnext(index->iterator))
@@ -168,7 +172,6 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
 
         while (set_hasnext(iter))
         {
-
             query_result_t *query_result = malloc(sizeof(query_result_t));
             if (query_result == NULL)
                 fatal_error("Out of memory");
@@ -197,10 +200,16 @@ set_t *parse_query(index_t *index, char **errmsg)
     if (compare_strings(index->current_word, "ANDNOT") == 0)
     {
         if (list_hasnext(index->iterator))
-        {
             index->current_word = list_next(index->iterator);
+        
+        set_t *foo = parse_query(index, errmsg);
+        if(foo == NULL)
+        {
+            *errmsg = "Something went wrong..";
+            return NULL;
         }
-        return set_difference(term, parse_query(index, errmsg));
+
+        return set_difference(term, foo);
     }
 
     return term;
@@ -216,10 +225,16 @@ set_t *parse_andterm(index_t *index, char **errmsg)
     if (compare_strings(index->current_word, "AND") == 0)
     {
         if (list_hasnext(index->iterator))
-        {
             index->current_word = list_next(index->iterator);
+        
+        set_t *foo = parse_andterm(index, errmsg);
+        if(foo == NULL)
+        {
+            *errmsg = "Something went wrong..";
+            return NULL;
         }
-        return set_intersection(term, parse_andterm(index, errmsg));
+
+        return set_intersection(term, foo);
     }
 
     return term;
@@ -235,10 +250,16 @@ set_t *parse_orterm(index_t *index, char **errmsg)
     if (compare_strings(index->current_word, "OR") == 0)
     {
         if (list_hasnext(index->iterator))
-        {
             index->current_word = list_next(index->iterator);
+
+        set_t *foo = parse_orterm(index, errmsg);
+        if(foo == NULL)
+        {
+            *errmsg = "Something went wrong..";
+            return NULL;
         }
-        return set_union(term, parse_orterm(index, errmsg));
+
+        return set_union(term, foo);
     }
 
     return term;
@@ -253,12 +274,25 @@ set_t *parse_term(index_t *index, char **errmsg)
     if (compare_strings(index->current_word, "(") == 0)
     {
         if (list_hasnext(index->iterator))
+        {
             index->current_word = list_next(index->iterator);
+        }
+        else
+        {
+            *errmsg = "Missing query..";
+            return NULL;
+        }
 
         set = parse_query(index, errmsg);
 
         if (list_hasnext(index->iterator))
+        {
             index->current_word = list_next(index->iterator);
+        }
+        else
+        {
+            *errmsg = "Something went wrong..";
+        }
 
         if (compare_strings(index->current_word, ")") != 0)
         {
@@ -267,7 +301,9 @@ set_t *parse_term(index_t *index, char **errmsg)
         }
 
         if (list_hasnext(index->iterator))
+        {
             index->current_word = list_next(index->iterator);
+        }
     }
 
     // <word>
@@ -276,6 +312,10 @@ set_t *parse_term(index_t *index, char **errmsg)
         set = map_get(index->hashmap, index->current_word);
         if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
+    }
+    else
+    {
+        *errmsg = "Something went wrong..";
     }
 
     return set;
