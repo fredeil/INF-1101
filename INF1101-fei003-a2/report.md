@@ -1,16 +1,13 @@
 # INF-1101 - fei003 - a2
-This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter the indexed documents. The indexer is then used in a simple search engine application. 
+This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar that describes the unambiguous rules that determines the legal expressions of the query language. 
 
 ## 1. Implementation requirements
-Some implementation details were given for the ordered set. The supported operations are:
-1. Adding an element to the set.
-2. Getting the current size of the set.
-3. Checking wheter a specific element is contained in the set.
-4. Getting the union of the set and another set.
-5. Getting the intersection of the set and another set.
-6. Getting the relative component set of the set.
-7. Iterating over the elements of the set, in sorted order.
-8. No upper bound on the number of elements that may be inserted into the set.
+The assessment can be broken into two main problems, which then can be recursively broken into 
+A big part of this assesment is the filtering mechanism described in the introduction. To be able to filter words in the documents we have to create a parser that can take the input of an end user and produce something that the machine can understand.
+
+The other part is implementing the 
+
+
 
 ### 1.1 Applications
 The intention of the index ADT is to use it for an easy but naive implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
