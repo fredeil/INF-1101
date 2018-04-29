@@ -2,15 +2,19 @@
 This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar that describes the unambiguous rules that determines the legal expressions of the query language. 
 
 ## 1. Implementation requirements
-The assessment can be broken into two main problems, which then can be recursively broken into 
-A big part of this assesment is the filtering mechanism described in the introduction. To be able to filter words in the documents we have to create a parser that can take the input of an end user and produce something that the machine can understand.
+The assessment can be broken into two main problems. Each problem can can then be further split into sub-sub problems. For instance:
 
-The other part is implementing the 
+* **Parsing:** ambiguity, sanitizing input, error handling etc.
+* **Indexing:** structure, algorithms, containers to hold the data etc.
 
+
+The biggest problem of this assesment is the filtering mechanism described in the introduction. 
+To be able to filter words in the documents we have the program needs a (query) parser that can take the input of an end user and produce something that the machine can understand.
 
 
 ### 1.1 Applications
-The intention of the index ADT is to use it for an easy but naive implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
+The intention of the index ADT is to use it for an easy 
+The intention of the index ADT is to use it for an easy but implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
 
 An e-mail `M` is classified as spam if, and only if
 
