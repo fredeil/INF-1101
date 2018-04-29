@@ -32,7 +32,7 @@ typedef struct doc
 // Compares the paths inside two given docs
 int compare_docs(void *a, void *b)
 {
-    if(a == NULL || b == NULL)
+    if (a == NULL || b == NULL)
         return -1;
 
     return compare_strings(((doc_t *)a)->path, ((doc_t *)b)->path);
@@ -80,9 +80,10 @@ void index_addpath(index_t *index, char *path, list_t *words)
 
     while (list_size(words) != 0)
     {
+        // Empty out the list word by word
         char *current_word = list_popfirst(words);
 
-        // Word was already inserted to the hashmap
+        // Hashmap already contains the word (key)
         if (map_haskey(index->hashmap, current_word) == 1)
         {
             set_t *set = map_get(index->hashmap, current_word);
@@ -154,6 +155,7 @@ int compare_query(void *a, void *b)
     return aa > bb ? -1 : aa < bb ? 1 : 0;
 }
 
+// Performs the given query on the given index.
 list_t *index_query(index_t *index, list_t *query, char **errmsg)
 {
 
@@ -177,8 +179,13 @@ list_t *index_query(index_t *index, list_t *query, char **errmsg)
                 fatal_error("Out of memory");
 
             doc_t *doc = set_next(iter);
+
+            double tf = (doc->termt / doc->nterms);
+            double idf = log(index->num_docs / (double)set_size(set));
+
             query_result->path = doc->path;
-            query_result->score = (doc->termt / doc->nterms) * log(index->num_docs / (double)set_size(set));
+            query_result->score = tf * idf;
+
             list_addfirst(list, query_result);
         }
 
@@ -201,9 +208,9 @@ set_t *parse_query(index_t *index, char **errmsg)
     {
         if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
-        
+
         set_t *foo = parse_query(index, errmsg);
-        if(foo == NULL)
+        if (foo == NULL)
         {
             *errmsg = "Something went wrong..";
             return NULL;
@@ -226,9 +233,9 @@ set_t *parse_andterm(index_t *index, char **errmsg)
     {
         if (list_hasnext(index->iterator))
             index->current_word = list_next(index->iterator);
-        
+
         set_t *foo = parse_andterm(index, errmsg);
-        if(foo == NULL)
+        if (foo == NULL)
         {
             *errmsg = "Something went wrong..";
             return NULL;
@@ -253,7 +260,7 @@ set_t *parse_orterm(index_t *index, char **errmsg)
             index->current_word = list_next(index->iterator);
 
         set_t *foo = parse_orterm(index, errmsg);
-        if(foo == NULL)
+        if (foo == NULL)
         {
             *errmsg = "Something went wrong..";
             return NULL;
