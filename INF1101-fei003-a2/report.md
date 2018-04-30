@@ -1,28 +1,23 @@
 # INF-1101 - fei003 - a2
-This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar that describes the unambiguous rules that determines the legal expressions of the query language. 
+This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar (CFG) that describes the unambiguous rules that determines the legal expressions of the query language. 
 
-## 1. Implementation requirements
+The intention of the indexer is to use it for a basic search engine that has a simple web interface for evaluating queries on a set of documents located on the host, and returns a link to the matching files.
+Users of this web interface can search on either single words or a combination of words using the language described later in this report. 
+
+## 1. Technical background
 The assessment can be broken into two main problems. Each problem can can then be further split into sub-sub problems. For instance:
 
 * **Parsing:** ambiguity, sanitizing input, error handling etc.
 * **Indexing:** containers, algorithms, caching etc.
 
 
-The biggest problem of this assesment is the filtering mechanism described in the introduction. 
-To be able to filter words in the documents the program needs a (query) parser that can take the input of an end user and produce something that the machine can understand.
+The biggest problem of this assesment is the filtering mechanism described in the introduction. To be able to filter the words in the documents, the program requires a parser that can take the input (query) of a user and produce something meaningful out of it. The reason for this being hard lies in the nature of CFGs, which has it origins in human languages, and is therefore prone to being ambigous. 
+
+The CFG used in this asessment is called "Backus Naur Form (BNF) 
+<sup id="a1">[[1]](#f1)</sup> describes ambiguity in a single word as a word that can be understood in two or more ways and it is often referred to as ___lexical ambiguity___.
 
 
-### 1.1 Applications
-The intention of the index ADT is to use it for an easy 
-The intention of the index ADT is to use it for an easy but implementation of a spamfilter to classify e-mails as spam or non-spam. The algorithm used by the spamfilter is simple, it starts out with a set of e-mails known to be spam/not to be spam.
-
-An e-mail `M` is classified as spam if, and only if
-
-M &#8745; (( S1 &#8745; S2 &#8745; ... &#8745; Sn) - (N1 &#8746; N2 &#8746; ... &#8746; Sm)) &#8800; &#8709;
-
-where `Sn` is the spam words, `Nm` is the non-spam words. This states that if an e-mail is spam if it contains a word that occurs in *all* of the spam e-mails and *none* of the non-spam e-mails.
-
-## 2. Theoretical background
+### 1.1 Theoretical background
 <sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
 
 What this inherently means, is that the same set of operations can have several different implementations, and that the client can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
@@ -56,5 +51,8 @@ Apart from a few, minor caveats, the code is working as intended. There are obvi
 
 
 ## References
-<b id="f1">1</b> Robert Sedgewick, 1997. Algorithms in C, Parts 1-4: Fundamentals, Data Structures,
-Sorting, Searching: Fundamentals, Data Structures, Sorting, Searching. 3 Edition.
+<b id="f1">1</b> Robert Sedgewick, 1997. _Algorithms in C, Parts 1-4: Fundamentals, Data Structures,
+Sorting, Searching: Fundamentals, Data Structures, Sorting, Searching. 3 Edition._
+
+<b id="f2">2</b> Cecilia Quiroga-Clare, _Language Ambiguity: A Curse and a Blessing_ [Online]. Available:
+http://www.seasite.niu.edu/trans/articles/Language%20Ambiguity.htm
