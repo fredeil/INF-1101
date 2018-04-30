@@ -8,6 +8,7 @@ function program_is_installed {
   echo "$return_"
 }
 
+
 if [ $(program_is_installed markdown-pdf) ]; then
     markdown-pdf report.md
     open report.pdf
