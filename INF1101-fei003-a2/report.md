@@ -43,10 +43,13 @@ A term is an opening parenthesis `"("` followed by a `query` followed by a closi
 The syntax diagrams are a graphical alternative to the BNF, they describe the possible paths between two points by going through other nonterminal and terminals (terminals being round, nonterminals squared).
 
 ### 1.2 Indexing
+
+The contract of the index was given in the pre-code
+<sup id="a2">[[2]](#f2)</sup> defines an abstract data type (ADT) as a data type whos operations are accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). This means that the same set of operations can have different implementations, and clients can switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
+
 Indexing in itself is the process of *collecting*, *storing* and *parsing* data for facilitating information retrieval. The purpose of this is to optimize speed and performance when trying to find relevant data for a given search query <sup id="a3">[[3]](#f3)</sup>.
 
-<sup id="a2">[[2]](#f2)</sup> defines an abstract data type (ADT) as a data type whos operations are accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). This means that the same set of operations can have several different implementations, and clients can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
-
+The indexer in this assessemnt was a so-called *inverted indexer*, what this means is that unique words (keys) are stored and mapped to the locations (values) of the content (in our case html file on the computer). Basically we want to find every document where term `T` occurs.
 
 
 ## 3. Implementation
