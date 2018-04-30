@@ -14,7 +14,7 @@ The biggest problem of this assesment is the filtering mechanism described in th
 The data structures and algorithms used in this assessment was already done in the pre-code of the assessment. This report will not go in detail on the given data structures and algorithms. 
 
 ### 1.1 Parsing
-<sup id="a1">[[1]](#f1)</sup> describes ambiguity in a single word as a word that can be understood in two or more ways, and it's often referred to as ___lexical ambiguity___. The nature of CFGs has it origins in human languages, and is therefore prone to being ambigous. The CFG used in this asessment is called _Backus Naur Form (BNF)_.
+<sup id="a1">[[1]](#f1)</sup> describes ambiguity in a sentence as a sentence that can be understood in two or more ways, and it's often referred to as _structural ambiguity_. The nature of CFGs has it origins in human languages, and is therefore prone to being ambigous. The CFG used in this asessment is called _Backus Naur Form (BNF)_.
 
 The BNF describes our CFG, which is a set of rules used to describe or query language. The syntax is:
 * ` query ::=  andterm | andterm "ANDNOT" query `
@@ -40,15 +40,13 @@ An `orterm` is a `term` or a `term` and `"OR"` combined with an `orterm`.
 ![Term](./assets/term.png)
 A term is an opening parenthesis `"("` followed by a `query` followed by a closing parenthesis `")"`, or a `word`.
 
-The syntax diagrams are a graphical alternative to the BNF and they describes the possible paths between two points by going through other nonterminal and terminals (terminals are round, nonterminals squared).
-
+The syntax diagrams are a graphical alternative to the BNF, they describe the possible paths between two points by going through other nonterminal and terminals (terminals being round, nonterminals squared).
 
 ### 1.2 Indexing
-<sup id="a2">[[2]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). This means that the same set of operations can have several different implementations, and clients can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
+Indexing in itself is the process of *collecting*, *storing* and *parsing* data for facilitating information retrieval. The purpose of this is to optimize speed and performance when trying to find relevant data for a given search query <sup id="a3">[[3]](#f3)</sup>.
 
-For implementing an index ADT, an interface that described the operations with its return types was pre-defined in the precode.
+<sup id="a2">[[2]](#f2)</sup> defines an abstract data type (ADT) as a data type whos operations are accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). This means that the same set of operations can have several different implementations, and clients can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
 
-Indexing in itself is the process of *collecting*, *storing* and *parsing* data for facilitating information retrieval. The purpose of this is to optimize speed and performance when trying to find relevant data for a given search query <sup id="a3">[[3]](#f1)</sup>.
 
 
 ## 3. Implementation
@@ -56,7 +54,8 @@ Indexing in itself is the process of *collecting*, *storing* and *parsing* data 
 
 ---- Skriv at syntax parsinga e recursive descent parser med "top down approach?"
 ---- What we can see from the figures above is that the syntax is recursive. We are actually using a *recursive descent parser* with a *top-down* design.
-
+ 
+ ---- For implementing an index ADT, an interface that described the operations with its return types was pre-defined in the precode.
 When deciding on which way to implement the sorted set, two alternatives were considered. One that would have low development cost but high performance cost and vice versa. These are trade offs that often has to be considered in real life situations when developing software (i.e., development cost vs optimal performance), so this was a good exercise.
 
 The sorted set implementation was done using the linked list implementation given in the precode. This is by far the slowest (in terms of run time), naive and reckless implementation (compared to other implementations). Very little effort went into optimizing the code. As long as the tests passed, it was fine. The positive part of this implementation was its low development cost (time), which was the prioritized factor for this assignment.
