@@ -49,11 +49,9 @@ The contract of the index was given in the pre-code
 
 Indexing in itself is the process of *collecting*, *storing* and *parsing* data for facilitating information retrieval. The purpose of this is to optimize speed and performance when trying to find relevant data for a given search query <sup id="a3">[[3]](#f3)</sup>.
 
-The indexer in this assessemnt was a so-called *inverted indexer*, what this means is that unique words (keys) are stored and mapped to the locations (values) of the content (in our case html file on the computer). Basically we want to find every document where term `T` occurs.
-
+The indexer in this assessemnt was a so-called *inverted indexer*, unique words (keys) are stored and mapped to the locations (values) of the content (in our case html file on the computer). Basically we are looking to find every document where term `T` occurs.
 
 ## 3. Implementation
-
 
 ---- Skriv at syntax parsinga e recursive descent parser med "top down approach?"
 ---- What we can see from the figures above is that the syntax is recursive. We are actually using a *recursive descent parser* with a *top-down* design.
