@@ -1,24 +1,40 @@
 # INF-1101 - fei003 - a2
-This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar (CFG) that describes the unambiguous rules that determines the legal expressions of the query language. 
+This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar (CFG) that describes the unambiguous rules for determing the legal expressions of the query language. 
 
 The intention of the indexer is to use it for a basic search engine that has a simple web interface for evaluating queries on a set of documents located on the host, and returns a link to the matching files.
 Users of this web interface can search on either single words or a combination of words using the language described later in this report. 
 
 ## 1. Technical background
-The assessment can be broken into two main problems. Each problem can can then be further split into sub-sub problems. For instance:
+The assessment can be into two main problems. Each problem can then be further split into sub-sub problems. For instance:
 
 * **Parsing:** ambiguity, sanitizing input, error handling etc.
 * **Indexing:** containers, algorithms, caching etc.
 
+The biggest problem of this assesment is the filtering mechanism described in the introduction. To be able to filter the words in the documents, the program requires a parser that can take the input (query) of a user and produce something meaningful out of it. 
 
-The biggest problem of this assesment is the filtering mechanism described in the introduction. To be able to filter the words in the documents, the program requires a parser that can take the input (query) of a user and produce something meaningful out of it. The reason for this being hard lies in the nature of CFGs, which has it origins in human languages, and is therefore prone to being ambigous. 
+The data structures and algorithms used in this assessment was given in the pre-code of the assessment. No elaboration on the implementation nor the benchmark of the algorithms or data structures is present in this report.
 
-The CFG used in this asessment is called "Backus Naur Form (BNF) 
-<sup id="a1">[[1]](#f1)</sup> describes ambiguity in a single word as a word that can be understood in two or more ways and it is often referred to as ___lexical ambiguity___.
+### 1.1 Parsing
+<sup id="a1">[[1]](#f1)</sup> describes ambiguity in a single word as a word that can be understood in two or more ways, and it's often referred to as ___lexical ambiguity___. The nature of CFGs has it origins in human languages, and is therefore prone to being ambigous. The CFG used in this asessment is called _Backus Naur Form (BNF)_.
 
+BNF describes our CFG, which is a set of rules used to describe or query language. The railroad diagrams below helps visualize the syntax.
+
+**Query:**
+![Query](./assets/query.png)
+
+**Andterm:**
+![Andterm](./assets/andterm.png)
+
+**Orterm:**
+![Orterm](./assets/orterm.png)
+
+**Term:**
+![Term](./assets/term.png)
+### 1.2 Indexing
+Blaha
 
 ### 1.1 Theoretical background
-<sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are only accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
+<sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
 
 What this inherently means, is that the same set of operations can have several different implementations, and that the client can safely switch betweeen implementations without breaking existing code (as long as the contract of the interface is held).
 
