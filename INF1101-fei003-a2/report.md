@@ -40,7 +40,7 @@ An `orterm` is a `term` or a `term` and `"OR"` combined with an `orterm`.
 ![Term](./assets/term.png)
 A term is an opening parenthesis `"("` followed by a `query` followed by a closing parenthesis `")"`, or a `word`.
 
-What we can see from the figures above is that the parenthesis in the `term` is what is keeping this syntax from being 
+The syntax diagrams are a graphical alternative to the BNF 
 
 ### 1.2 Indexing
 <sup id="a1">[[1]](#f1)</sup> defines an abstract data type (ADT) as a data type whos operations are accessible through an interface, and has its implementation hidden from the client (a program that uses an ADT). 
@@ -54,6 +54,7 @@ For implementing an index ADT, an interface that described the operations with i
 
 
 ---- Skriv at syntax parsinga e recursive descent parser med "top down approach?"
+---- What we can see from the figures above is that the syntax is recursive. We are actually using a *recursive descent parser* with a *top-down* design.
 
 When deciding on which way to implement the sorted set, two alternatives were considered. One that would have low development cost but high performance cost and vice versa. These are trade offs that often has to be considered in real life situations when developing software (i.e., development cost vs optimal performance), so this was a good exercise.
 
