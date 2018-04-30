@@ -5,11 +5,11 @@ This report details the implementation of an indexer that supports indexing of t
 The assessment can be broken into two main problems. Each problem can can then be further split into sub-sub problems. For instance:
 
 * **Parsing:** ambiguity, sanitizing input, error handling etc.
-* **Indexing:** structure, algorithms, containers to hold the data etc.
+* **Indexing:** containers, algorithms, caching etc.
 
 
 The biggest problem of this assesment is the filtering mechanism described in the introduction. 
-To be able to filter words in the documents we have the program needs a (query) parser that can take the input of an end user and produce something that the machine can understand.
+To be able to filter words in the documents the program needs a (query) parser that can take the input of an end user and produce something that the machine can understand.
 
 
 ### 1.1 Applications
