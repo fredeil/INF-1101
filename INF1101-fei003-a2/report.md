@@ -42,6 +42,8 @@ A term is an opening parenthesis `"("` followed by a `query` followed by a closi
 
 The syntax diagrams are a graphical alternative to the BNF, they describe the possible paths between two points by going through other nonterminal and terminals (terminals being round, nonterminals squared).
 
+What we can see from the figures above is that the syntax is recursive. We are actually looking at a *recursive descent parser* with a *top-down* design
+
 ### 1.2 Indexing
 
 The contract of the index was given in the pre-code
@@ -49,27 +51,42 @@ The contract of the index was given in the pre-code
 
 Indexing in itself is the process of *collecting*, *storing* and *parsing* data for facilitating information retrieval. The purpose of this is to optimize speed and performance when trying to find relevant data for a given search query <sup id="a3">[[3]](#f3)</sup>.
 
-The indexer in this assessemnt was a so-called *inverted indexer*, unique words (keys) are stored and mapped to the locations (values) of the content (in our case html file on the computer). Basically we are looking to find every document where term `T` occurs.
+The indexer used in this assessement was a so-called *inverted indexer*, meaning that unique words (keys) are stored and mapped to the locations (values) of the content (in our case doucments on the computer). Basically we are looking to find every document where term `t` occurs.
 
-## 3. Implementation
+### 1.2.1 Query and result ranking
 
----- Skriv at syntax parsinga e recursive descent parser med "top down approach?"
----- What we can see from the figures above is that the syntax is recursive. We are actually using a *recursive descent parser* with a *top-down* design.
- 
- ---- For implementing an index ADT, an interface that described the operations with its return types was pre-defined in the precode.
+When the user enters a query in the web interface (located at localhost:8080), the query is then sent to the indexer which tokenizes the query string and stores it in a list. The values returned from the index is a list of documents that match the give query. 
+
+The list of documents ordered by relevance, first document being the most relevant and so on and so fort. For determing the relevance of the documents two algorithms called *term frequency (TF)* and *inverse document frequency (IDF)* is used. Where `TF` denotes the number of times the term `t` occurs in document `d` and `idf` denotes the logarithmically inverse faction of the documents that contains the word `t` divided by the number of documents `D` containing the word `t`.
+
+The problem with raw `TF` is that all words weighted equally important when it comes to relevance. Therefore, it's combined with the `IDF` which yields an algorithm called `tf-idf`.
+
+## 3. Design
+
+For implementing the index ADT, an interface that described the operations with its return types was pre-defined in the precode. All there was to do was to decide which data structures to utilize inside the index. The chosen data structure was a hashmap that contained a set of documents. The documents contains the path to the file and its ranking score.
+
+The indexer works in this way:
+
+**For each document and for each word in the document current document:**
+* Does hashmap contain word?
+    * Create document and set, put in map 
+* else, set contains document?
+    * add the score
+* else, create new document with a new path
+
+
+
 When deciding on which way to implement the sorted set, two alternatives were considered. One that would have low development cost but high performance cost and vice versa. These are trade offs that often has to be considered in real life situations when developing software (i.e., development cost vs optimal performance), so this was a good exercise.
 
-The sorted set implementation was done using the linked list implementation given in the precode. This is by far the slowest (in terms of run time), naive and reckless implementation (compared to other implementations). Very little effort went into optimizing the code. As long as the tests passed, it was fine. The positive part of this implementation was its low development cost (time), which was the prioritized factor for this assignment.
+---- Skriv at syntax parsinga e recursive descent parser med "top down approach?"
 
-The caveat of using a linked list implementation for the set was definitely the sorting algorithm. This is due to the fact that the set had to be a *sorted* set, hence, the sort of the linked list had to be invoked on every add call.
+## 4. Implementation
 
-## 4. Discussion
-For benchmarking the `set_add` function, three sets of data with 450 elements were generated, one with random numbers, one with increasingly larger numbers and one with a constant value. 
+The application is implemented using the `C` programming language with the `Apple LLVM version 9.1.0 (clang-902.0.39.1)` compiler on a `x86_64-apple-darwin17.5.0` architecture with a `posix` thread model. Apart from the obvious standard libraries, most of the re-used code is already credited to people it involves inside the source code.
 
+## 5. Discussion
 
-
-## 5. Conclusion
-
+## 6. Conclusion
 
 
 ## References
@@ -77,5 +94,5 @@ For benchmarking the `set_add` function, three sets of data with 450 elements we
 http://www.seasite.niu.edu/trans/articles/Language%20Ambiguity.htm
 
 <b id="f2">[2]</b> Robert Sedgewick, 1997. _Algorithms in C, Parts 1-4: Fundamentals, Data Structures,
-Sorting, Searching: Fundamentals, Data Structures, Sorting, Searching. 3 Edition._
+Sorting, Searching: Fundamentals, Data Structures, Sorting, Searching. 3 Edition.
 
