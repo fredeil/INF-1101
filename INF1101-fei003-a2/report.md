@@ -1,8 +1,6 @@
 # INF-1101 - fei003 - a2
 This report details the implementation of an indexer that supports indexing of text documents and evaluation of queries to filter words within the indexed documents. The filtering mechanism is based on a context-free grammar (CFG) that describes the unambiguous rules for determing the legal expressions of the query language. 
 
-The intention of the indexer is to use it for a basic search engine that has a simple web interface for evaluating queries on a set of documents located on the host, and returns a link to the matching files. Users of this web interface can search on either single words or a combination of words using the language described later in this report. 
-
 ## 1. Theoretical background
 The assessment can be into two main problems. Each problem can then be further split into sub-sub problems. For instance:
 
@@ -103,7 +101,11 @@ There is unfortunately some bugs in the parser still that were not found during 
 In hindsight, the way that the index is implemented is could also be done differently. The excessive use of table lookups and set lookups is what´s causing the indexing to take > 3 seconds when starting the program.
 
 ## 6. Conclusion
-In this report the details of how a index ADT that supports indexing of documents and evaluation of queries to find occurences of words in the documents is described. The resulting index was an inverted index containing the words and all the locations of the documents with the words were mapped. 
+In this report the details of how a index ADT that supports indexing of documents and evaluation of queries to find occurences of words in the documents is described. The resulting index was an inverted index containing the words and all the locations of the documents with the words. 
+
+The intention of the index was to use it for a basic search engine that had a simple web interface for evaluating queries on a set of documents located on the host tbat returned a link to the matching documents. 
+
+The Users of this web interface could search on either single words or a combination of words using the language described in this report.
 
 ## References
 <b id="f1">[1]</b> Cecilia Quiroga-Clare, _Language Ambiguity: A Curse and a Blessing_ [Online]. Available:
