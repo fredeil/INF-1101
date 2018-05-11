@@ -2,7 +2,7 @@
 
 static int partition(int *data, int min, int max)
 {
-  return 0;
+	return 0;
 }
 
 static void _quicksort(int *data, int min, int max)
@@ -11,5 +11,5 @@ static void _quicksort(int *data, int min, int max)
 
 void quicksort(int *data, int size)
 {
-  _quicksort(data, 0, size - 1);    
+	_quicksort(data, 0, size - 1);
 }
