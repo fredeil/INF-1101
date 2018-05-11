@@ -2,11 +2,36 @@
 
 static int partition(int *data, int min, int max)
 {
-	return 0;
+	int piv = data[(min + (max - min) / 2)];
+
+	while(min <= max)
+	{
+		while(data[min] < piv) min++;
+		while(data[max] > piv) max--;
+
+		if(min <= max)
+		{
+			int tmp = data[min];
+			data[min] = data[max];
+			data[max] = tmp;
+			
+			min++;
+			max--;
+		}
+	}
+
+	return min;
 }
 
 static void _quicksort(int *data, int min, int max)
 {
+	int idx = partition(data, min, max);
+
+	if(min < idx)
+		_quicksort(data, min, idx);
+	
+	if(idx < max)
+		_quicksort(data, idx, max);
 }
 
 void quicksort(int *data, int size)
