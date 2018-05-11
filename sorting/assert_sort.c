@@ -226,8 +226,8 @@ int main(int argc, char **argv)
 	test_algorithm(bubblesort, test_data, "Bubblesort");
 	test_algorithm(insertion_sort, test_data, "Insertion sort");
 	test_algorithm(selection_sort, test_data, "Selection sort");
-	test_algorithm(mergesort, test_data, "Mergesort");
-	test_algorithm(heapsort, test_data, "Heapsort");
+	test_algorithm(merge_sort, test_data, "Mergesort");
+	test_algorithm(heap_sort, test_data, "Heapsort");
 	test_algorithm(quicksort, test_data, "Quicksort");
 
 	// Cleanup
