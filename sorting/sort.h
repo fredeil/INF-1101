@@ -1,7 +1,6 @@
 #ifndef SORT_H
 #define SORT_H
 
-// Macros:
 #define SWAP(x, y) \
     int t;         \
     t = x;         \

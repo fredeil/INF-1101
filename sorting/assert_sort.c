@@ -196,10 +196,6 @@ void test_algorithm(sortfunc_t sort_func, test_data_t *test_data, char *name)
 	free(data);
 }
 
-/* ASSERT SORT:
- * usage: ./assert_sort <number of test elems>
- * WARNING: Large data sets require a big
- * memory pool. */
 int main(int argc, char **argv)
 {
 	int size = 1000; // Default size
@@ -209,10 +205,9 @@ int main(int argc, char **argv)
 		if (strcmp(argv[argc], "-p") == 0)
 			print = true; // Set print
 		else
-			size = (atoi(argv[argc]) > 0) ? atoi(argv[argc]) : 1000; // Custom size
+			size = (atoi(argv[argc]) > 0) ? atoi(argv[argc]) : 1000;
 	}
 
-	// INIT test data
 	printf("Initializing test data...\n");
 	test_data_t *test_data = init(size);
 	if (test_data == NULL)
