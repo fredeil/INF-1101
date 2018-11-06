@@ -1,5 +1,3 @@
 # INF-1101
-Datastructures and Algorithms in C. 
 
-
-## Something
+Algorithms and data structures in C, implemented in the most easiest and naive way possible
